@@ -4,9 +4,7 @@ var jtconfig = {
 		// develop path
 		base: '../',
 		// folds path for ignore
-		ignorePath: [],
-		//
-		outputPath: '../output'
+		ignorePath: []
 	},
 
 	proxy: {

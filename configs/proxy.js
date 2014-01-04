@@ -9,13 +9,8 @@ var target = module.exports = {},
  *		优先从build项目中去搜索 -> 绝对路径 -> 相对路径
  *
  * 对象类型：
- *		参考builder processer
+ *		参考pipe的builder processer
  *
- */
-
-
-/**
- * js
  */
 rule.js = {};
 rule.js['http://([^\\/]+)/(.*)js($)'] = {
@@ -31,8 +26,8 @@ rule.js['http://([^\\/]+)/(.*)js($)'] = {
 /*===============================host===============================*/
 
 
-target.port8080 = {
+target['default'] = {
 	description: 'default',
-	list: jt.utils.extend({}, rule.js),
+	list: jt.utils.extend({}, rule),
 	hosts: {}
 };
