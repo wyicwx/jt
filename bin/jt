@@ -1,0 +1,43 @@
+#!/usr/bin/env node
+
+'use strict';
+
+var jt = module.exports = require('../lib/kernel.js');
+
+var fs = require('fs');
+var path = require('path');
+
+function checkJtConfig() {
+	var commandDir = path.resolve('./'),
+		execuDir;
+
+	commandDir = commandDir.split(path.sep);
+	
+	while(commandDir.length > 1) {
+		execuDir = path.join(commandDir.join(path.sep), '/.jt');
+
+		if(fs.existsSync(execuDir)) {
+			if(fs.existsSync(execuDir + '/config.js')) {
+				return execuDir;
+			}
+		}
+		commandDir.pop();
+	}
+	return false;
+}
+
+// use jt init command 
+if(jt.argv.init) {
+	jt.commander.createConfig();
+	// jt.init();
+} else {
+	var cwd = checkJtConfig();
+	if(cwd) {
+		jt.cwd = cwd;
+		jt.init();
+	} else {
+		console.log('  Fatal error: Unable to find local jt file.');
+		console.log('');
+		console.log('  If you\'re seeing this message, 你应该用jt init来初始化你的项目');
+	}
+}

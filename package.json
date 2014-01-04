@@ -1,0 +1,35 @@
+{
+	"name": "jt-cli",
+	"version": "0.0.1",
+	"description": "javascript develop tool",
+	"main": "main.js",
+	"directories": {
+		"test": "test"
+	},
+	"dependencies": {
+		"colors": "~0.6.1",
+		"express": "~3.3.8",
+		"iconv-lite": "~0.2.11",
+		"jsmin2": "~1.1.7",
+		"mime": "~1.2.11",
+		"mutils": "~0.0.5",
+		"uglify-js": "~2.4.0",
+		"yuicompressor": "~2.4.8"
+	},
+	"devDependencies": {},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/wyicwx/jt.git"
+	},
+	"bin": {
+		"jt": "bin/jt"
+	},
+	"author": "",
+	"license": "BSD-2-Clause",
+	"bugs": {
+		"url": "https://github.com/wyicwx/jt/issues"
+	}
+}
