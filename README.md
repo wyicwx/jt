@@ -1,5 +1,4 @@
-# JT
-
+# JT 
 > The javascript develop toolkit command line interface.
 
 ```shell
