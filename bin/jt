@@ -28,8 +28,7 @@ function checkJtConfig() {
 
 // use jt init command 
 if(jt.argv.init) {
-	jt.commander.createConfig();
-	// jt.init();
+	jt.commander.trigger('init');
 } else {
 	var cwd = checkJtConfig();
 	if(cwd) {
