@@ -1,6 +1,6 @@
 {
 	"name": "jt-cli",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "javascript develop tool",
 	"main": "main.js",
 	"directories": {
@@ -9,7 +9,6 @@
 	"dependencies": {
 		"colors": "~0.6.1",
 		"express": "~3.3.8",
-		"iconv-lite": "~0.2.11",
 		"jsmin2": "~1.1.7",
 		"mime": "~1.2.11",
 		"mutils": "~0.0.5",
