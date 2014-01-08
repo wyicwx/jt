@@ -1,14 +1,14 @@
 {
 	"name": "jt-cli",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"description": "javascript develop tool",
+	"author": "wyicwx (http://weibo.com/simplemaple)",
 	"main": "main.js",
 	"directories": {
 		"test": "test"
 	},
 	"dependencies": {
 		"colors": "~0.6.1",
-		"express": "~3.3.8",
 		"jsmin2": "~1.1.7",
 		"mime": "~1.2.11",
 		"mutils": "~0.0.5",
@@ -17,7 +17,7 @@
 	},
 	"devDependencies": {},
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "mocha"
 	},
 	"repository": {
 		"type": "git",
@@ -26,8 +26,7 @@
 	"bin": {
 		"jt": "bin/jt"
 	},
-	"author": "",
-	"license": "BSD-2-Clause",
+	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/wyicwx/jt/issues"
 	}

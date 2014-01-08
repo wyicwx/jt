@@ -14,7 +14,6 @@ config.proxy = {
 	slowLoad: false,
 	slowBlockByte: 10240,
 	slowTimeInterval: 100,
-	slient: true,
 	pacFile: "proxy.pac",
 	proxy: {
 		enable: false,

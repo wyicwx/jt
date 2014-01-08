@@ -11,7 +11,10 @@ var jtconfig = {
 		slowLoad: false,
 		slowBlockByte: 10240,
 		slowTimeInterval: 100,
-		slient: true,
+		agent: {
+			host: null,
+			port: null
+		},
 		port: {
 			"8080": "default"
 		}
