@@ -34,6 +34,7 @@ if(jt.argv.init) {
 	if(cwd) {
 		jt.cwd = cwd;
 		jt.init();
+		jt.run();
 	} else {
 		console.log('  Fatal error: Unable to find local jt file.');
 		console.log('');
