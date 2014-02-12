@@ -1,5 +1,5 @@
 var jtconfig = {
-
+	base: '../',
 	builder: {
 		// develop path
 		base: '../',

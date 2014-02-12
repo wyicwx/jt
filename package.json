@@ -17,7 +17,8 @@
 	},
 	"devDependencies": {
 		"mocha": "*",
-		"blanket": "*"
+		"blanket": "*",
+		"rewire": "*"
 	},
 	"scripts": {
 		"test": "make test-all"

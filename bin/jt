@@ -33,6 +33,7 @@ if(jt.argv.init) {
 	var cwd = checkJtConfig();
 	if(cwd) {
 		jt.cwd = cwd;
+		jt.config = require(path.join(jt.cwd, '/config.js'));
 		jt.init();
 		jt.run();
 	} else {

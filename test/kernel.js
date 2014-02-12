@@ -6,7 +6,6 @@ describe('kernel', function() {
 			require('../lib/kernel.js');
 		} catch(e) {
 			assert.ok(false);
-			return;
 		}
 		assert.ok(true);		
 	});	
