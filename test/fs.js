@@ -51,7 +51,7 @@ describe('jt.fs', function() {
 
 		it('run not define processor', function(done) {
 			jt.fs.readFile('fs/h.js', function(data) {
-				if(data.toString().trim() == '') {
+				if(data.toString() == '') {
 					done();
 				} else {
 					done(true);
@@ -159,9 +159,9 @@ describe('jt.fs', function() {
 
 		describe('#_readSimpleFile()', function() {		
 			var filename = path.join(jt.root, 'test/fs/fs.js');
-			it('it use fs.readFile but not file return ""', function(done) {
+			it('it use fs.readFile but not file return null', function(done) {
 				jt.fs.__get__('_readSimpleFile')(filename, function(data) {
-					if(data.toString().trim() === '') {
+					if(data.toString() === '') {
 						done();
 					} else {
 						done(true);

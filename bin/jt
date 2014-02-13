@@ -26,6 +26,9 @@ function checkJtConfig() {
 	return false;
 }
 
+// load commander
+jt.commander = require('../lib/commander.js');
+
 // use jt init command 
 if(jt.argv.init) {
 	jt.commander.trigger('init');
