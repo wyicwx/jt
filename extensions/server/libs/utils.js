@@ -6,9 +6,7 @@ var config = jt.config.proxy;
  * 		before
  * 		{	
  * 			"www.qq.com": {
- * 				"enabled": true,
- * 				"respond": "www.qq.com",
- * 				"compresseHtml": true
+ * 				"respond": "www.qq.com"
  * 			}
  * 		}
  * 		after
@@ -16,14 +14,13 @@ var config = jt.config.proxy;
  * 			{
  * 				"match": /www\.baidu\.com/,
  * 				"originalMatch": "www.qq.com",
- * 				"enabled": true,
- * 				"compresseHtml": true
+ * 				"respond": "www.qq.com"
  * 			}	
  * 		]
  */
 (function(e) {
 
-	function _dealEscape(str) {
+	function _escape(str) {
 		var match = ['\\\\','\\.','\\?','\\+','\\$','\\^','\\/','\\{','\\}','\\,','\\)','\\(','\\=','\\!','\\*'].join('|');
 		str = str.replace(new RegExp(match, 'gi'), function(value) {
 			return '\\' + value;
@@ -31,7 +28,7 @@ var config = jt.config.proxy;
 		return str;
 	};
 
-	function _dealStr(str) {
+	function _parse(str) {
 		var tmp = str.split(/(?=\()|(?=\))/g),
 			strDealed = '', count = 0;
 
@@ -45,30 +42,26 @@ var config = jt.config.proxy;
 					strDealed += value;
 				} else {
 					strDealed += ')';
-					strDealed += _dealEscape(value.slice(1));
+					strDealed += _escape(value.slice(1));
 				}
 			} else {
-				strDealed += _dealEscape(value);
+				strDealed += _escape(value);
 			}
 		});
-		try {
-			tmp = new RegExp(strDealed);
-			return tmp; 
-		} catch(e) {
-			console.log('rule error:');
-			console.log(e);
-		}
+
+		tmp = new RegExp(strDealed);
+		return tmp; 
 	};
 
 	function _dealList(list) {
 		var newList = [], tmp, respond;
 		for(var i in list) {
 			tmp = jt.utils.clone(list[i]);
-			tmp['match'] = _dealStr(i);
+			tmp['match'] = _parse(i);
 			tmp['originalMatch'] = i;
 			// 对象则调用
 			if(!jt.utils.isArray(tmp.respond)) {
-				tmp.respond = [tmp.respond];
+				tmp.respond = tmp.respond;
 			}
 			newList.push(tmp);
 		}
