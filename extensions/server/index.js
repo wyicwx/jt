@@ -1,80 +1,146 @@
+var http = require('http'),
+	path = require('path'),
+	child_process = require('child_process');
 
 
+var OPTIONS = [];
 
+function parse() {
+	if(OPTIONS.length) {
+		return;
+	}
 
+	function _escape(str) {
+		var match = ['\\\\','\\.','\\?','\\+','\\$','\\^','\\/','\\{','\\}','\\,','\\)','\\(','\\=','\\!','\\*'].join('|');
+		str = str.replace(new RegExp(match, 'gi'), function(value) {
+			return '\\' + value;
+		});
+		return str;
+	}
 
+	function _parse(str) {
+		var tmp = str.split(/(?=\()|(?=\))/g),
+			strDealed = '', count = 0;
 
-
-	http.createServer(function(request, response) {
-		// hold 所有请求
-		if(request.headers.host.search(/127.0.0.1|localhost/) == -1) {
-			//请求是否在可以命中匹配规则
-			var fileInfo = requestHandler.getReplaceFileInfo(request);
-
-			if(fileInfo) {
-				requestHandler.fileGeter(fileInfo.respond, function(data) {
-					var headers, dataBuffers;
-
-					headers = requestHandler.getHttpHeader({
-						ext: fileInfo.ext,
-						filename: fileInfo.url
-					});
-
-					response.writeHead(200, headers);
-
-					// if(config.slowLoad) {
-					// 	dataBuffers = new utils.bufferHepler(data);
-					// 		var stop = proxy.slow(dataBuffers, function(data) {
-					// 		if(data) {
-					// 			response.write(data);
-					// 		} else {
-					// 			response.end();
-					// 		}
-					// 	});
-					// 	stop();
-					// } else {
-						// utils.log('respond for ' + request.url);
-						response.write(data);
-						response.end();
-
-					// } 
-				});
+		tmp.forEach(function(value) {
+			if(value[0] == '(') {
+				strDealed += value;
+				count += 1;
+			} else if(value[0] == ')') {
+				count -= 1;
+				if(count > 0) {
+					strDealed += value;
+				} else {
+					strDealed += ')';
+					strDealed += _escape(value.slice(1));
+				}
 			} else {
-				// 发起http请求并返回给本机
-				requestHandler.reply(request, response);
+				strDealed += _escape(value);
 			}
+		});
+
+		tmp = new RegExp(strDealed);
+		return tmp; 
+	}
+
+	function _dealList(list) {
+		var newList = [], tmp, respond;
+		for(var i in list) {
+			tmp = jt.utils.clone(list[i]);
+			tmp['match'] = _parse(i);
+			tmp['original'] = i;
+			// 对象则调用
+			if(!jt.utils.isArray(tmp.respond)) {
+				tmp.respond = [tmp.respond];
+			}
+			newList.push(tmp);
 		}
-	}).on('error', function(err) {
-		if(err.code == 'EADDRINUSE') {
-			console.log('');
-			console.log(('    port ' + port + ' in use').red); 
-		} else {
-			throw err;
-		}
-	}).listen(port);
+		return newList;
+	}
 
+	var servers = jt.config.server;
+	if(!jt.utils.isArray(servers)) {
+		servers = [servers];
+	}
 
-
-
-
-
-
-
-
-
-
-
-
+	servers.forEach(function(sv) {
+		sv.list = _dealList(sv.list);
+		sv.hosts = sv.hosts || {};
+		sv.proxy = sv.proxy || {};
+		sv.slowSpeedSimulate = sv.slowSpeedSimulate || {};
+		OPTIONS.push(sv);
+	});
+}
 
 // support for commander
 (function() {
-	if(jt.commander) {
-		commander.define({
-			cmd: 'server',
-			description: 'start proxy server',
-			handler: function() {
-				server.start();
-			}
-		});
-	}
+
+	jt.commander.define({
+		cmd: 'server',
+		description: 'start proxy server',
+		handler: function() {
+			parse();
+
+			require('./server.js')(OPTIONS);
+			
+		}
+	});
+
+	// jt.commander.define({
+	// 	cmd: 'check [port],[url]',
+	// 	description: 'rule test',
+	// 	handler: function(argv) {
+	// 		var port = argv[0],
+	// 			url = argv[1];
+
+	// 		if(!port) {
+	// 			console.log('');
+	// 			console.log("    error: command `%s' argument missing", 'check');
+	// 			console.log('');
+	// 		} else if(port in jt.config.proxy.port) {
+	// 			var rule = jt.proxy.formatRule(port);
+
+	// 			if(!url) { // shoe rule list
+	// 				console.log('  list:');
+	// 				if(jt.utils.size(rule.lists)) {
+	// 					jt.utils.each(rule.lists, function(list) {
+	// 						console.log('    '+list.originalMatch);
+	// 						console.log('    '+list.match);
+	// 						console.log('');
+	// 					});
+	// 				} else {
+	// 					console.log('    not list was defined.');
+	// 				}
+
+	// 				console.log('  host:');
+	// 				if(jt.utils.size(rule.hosts)) {
+	// 					jt.utils.each(rule.hosts, function(ip, host, list) {
+	// 						var con = '    '+jt.utils.fill(host, 30, ' ', true)+ip;
+	// 						console.log(con);
+	// 					});
+	// 				} else {
+	// 					console.log('    not host was defined.');
+	// 				}
+	// 			} else { // check url
+	// 				console.log('');
+	// 				if(jt.utils.size(rule.lists)) {
+	// 					jt.utils.each(rule.lists, function(list) {
+	// 						if(list.match.test(url)) {
+	// 							console.log('    '+list.originalMatch);
+	// 							console.log('    hit'.green);
+	// 						} else {
+	// 							console.log(('    '+list.originalMatch).grey);
+	// 							console.log('    pass'.grey);
+	// 						}
+	// 					});
+	// 					console.log('');
+	// 				} else {
+	// 					console.log('    not list was defined.');
+	// 				}
+	// 			}
+	// 		} else {
+	// 			console.log('  not found proxy config of '+port);
+	// 		}
+	// 	}
+	// });
 })();
