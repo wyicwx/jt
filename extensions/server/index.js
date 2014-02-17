@@ -10,14 +10,6 @@ function parse() {
 		return;
 	}
 
-	function _escape(str) {
-		var match = ['\\\\','\\.','\\?','\\+','\\$','\\^','\\/','\\{','\\}','\\,','\\)','\\(','\\=','\\!','\\*'].join('|');
-		str = str.replace(new RegExp(match, 'gi'), function(value) {
-			return '\\' + value;
-		});
-		return str;
-	}
-
 	function _parse(str) {
 		var tmp = str.split(/(?=\()|(?=\))/g),
 			strDealed = '', count = 0;
@@ -32,10 +24,10 @@ function parse() {
 					strDealed += value;
 				} else {
 					strDealed += ')';
-					strDealed += _escape(value.slice(1));
+					strDealed += jt.utils.escapeRegExpExpress(value.slice(1));
 				}
 			} else {
-				strDealed += _escape(value);
+				strDealed += jt.utils.escapeRegExpExpress(value);
 			}
 		});
 

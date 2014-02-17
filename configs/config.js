@@ -1,12 +1,12 @@
 var jtconfig = {
 	base: '../',
-	builder: {
-		// develop path
-		base: '../',
-		// folds path for ignore
+	fs: {
+		list: [],
 		ignorePath: []
 	},
-
+	builder: {
+		list: []
+	},
 	proxy: {
 		slowLoad: false,
 		slowBlockByte: 10240,
@@ -19,7 +19,17 @@ var jtconfig = {
 			"8080": "default"
 		}
 	},
-	
+	server: {
+			slowSpeedSimulate: {
+				enable: false,
+				highWaterMark: 100,
+				interval: 10,
+			},
+			port: 8081,
+			description: '81 host only',
+			list: {},
+			hosts: {}
+	},
 	processor: {
 		gzip: true
 	}

@@ -7,24 +7,32 @@ require('../lib/kernel.js');
 jt.config = require('../configs/config.js');
 jt.config.base = path.resolve(__dirname);
 jt.config.fs = {
-	"fs/": {
-		"c.js": [
-			"a.js",
-			"b.js"
-		],
-		"d.js": "d.js",
-		"e.js": "a.js",
-		"f.js": [{
-			"processor": "string",
-			"value": "string"
-		}],
-		"g.js": [
-			'c.js',
-			'f.js'
-		],
-		"h.js": [{
-			"processor": "notDefine"
-		}]
+	list : {
+		"fs/": {
+			"c.js": [
+				"a.js",
+				"b.js"
+			],
+			"d.js": "d.js",
+			"e.js": "a.js",
+			"f.js": [{
+				"processor": "string",
+				"value": "string"
+			}],
+			"g.js": [
+				'c.js',
+				'f.js'
+			],
+			"h.js": [{
+				"processor": "notDefine"
+			}],
+			"i.js": [{
+				"processor": "string",
+				"value": "string"
+			}],
+			"testForSearch.js": "a.js",
+			"reTestForSearch.js": "a.js"
+		}
 	}
 };
 
@@ -33,6 +41,16 @@ jt.fs = rewire('../lib/fs.js');
 
 describe('jt.fs', function() {
 	describe('#pretreatment', function() {
+		it('flatten jt.config.fs must not be change', function() {
+			['c.js', 'd.js', 'e.js', 'f.js', 'g.js', 'h.js', 'i.js'].forEach(function(name) {
+				if(path.join(jt.config.base, "fs/"+name) in jt.config.fs.list) {
+					assert.ok(true);
+				} else {
+					assert.ok(false);
+				}
+			});
+		});
+
 		it('define processor', function() {		
 			jt.fs.processorDefine('string', function(data) {
 				this.next(data.value);
@@ -149,6 +167,51 @@ describe('jt.fs', function() {
 			var ensure2 = jt.fs.isVirtual('fs/b.js');
 
 			assert.ok(!ensure1 && !ensure2);
+		});
+	});
+
+	describe('#search()', function() {
+		it('could be search file while exist in real file system', function() {
+			jt.fs.search('b.js', function(data) {
+				var file = jt.fs.pathConverter('fs/b.js'),
+					hasFile = false;
+
+				data.forEach(function(value) {
+					if(value == file) {
+						hasFile = true;
+					}
+				});
+
+				if(hasFile) {
+					assert.ok(true);
+				} else {
+					assert.ok(false);
+				}
+			});
+		});
+	});
+
+	describe('#searchVirtual()', function() {
+		it('could be fuzzy search', function() {
+			var result = jt.fs.searchVirtual('ForSearch.js'),
+				ret1 = jt.fs.pathConverter('fs/testForSearch.js'),
+				ret2 = jt.fs.pathConverter('fs/reTestForSearch.js'),
+				hasRet1 = false, hasRet2 = false;
+
+			result.forEach(function(value) {
+				if(!hasRet1 && value == ret1) {
+					hasRet1 = true;
+				}
+				if(!hasRet2 && value == ret2) {
+					hasRet2 = true;
+				}
+			});
+
+			if(hasRet1 && hasRet2) {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
 		});
 	});
 
