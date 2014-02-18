@@ -267,8 +267,7 @@ function startServer(option) {
 		}
 	}).on('error', function(err) {
 		if(err.code == 'EADDRINUSE') {
-			console.log('');
-			console.log(('    port ' + port + ' in use').red); 
+			console.log('  [error]'.red+' port ' + option.port + ' in use'); 
 		} else {
 			throw err;
 		}

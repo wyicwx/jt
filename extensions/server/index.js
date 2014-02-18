@@ -69,7 +69,7 @@ function parse() {
 
 	jt.commander.define({
 		cmd: 'server',
-		description: 'start proxy server',
+		description: 'start server',
 		handler: function() {
 			parse();
 

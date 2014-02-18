@@ -172,6 +172,16 @@ describe('jt.fs', function() {
 
 	describe('#search()', function() {
 		it('could be search file while exist in real file system', function() {
+			jt.fs.search('c.js', function(data) {
+				if(jt.fs.isVirtual(data[0])) {
+					assert.ok(true);
+				} else {
+					assert.ok(false);
+				}
+			});
+		});
+
+		it('it search virtual result must be in virtual file system', function() {
 			jt.fs.search('b.js', function(data) {
 				var file = jt.fs.pathConverter('fs/b.js'),
 					hasFile = false;
