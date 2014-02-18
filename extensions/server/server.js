@@ -7,60 +7,6 @@ var cluster = require('cluster'),
 	TrickleStream = require('./TrickleStream.js');
 
 http.globalAgent.maxSockets = 240;
-// cluster.setupMaster({
-// 	exec: path.join(pwd, 'request.js')
-// });
-
-// var workerManager = {
-// 	worker: null,
-// 	status: null,
-// 	workQueue: [],
-// 	retryCount: 0,
-// 	sendToSetup: null,
-// 	addWork: function(work) {
-// 		this.workQueue.push(work);
-// 		if(this.status == 'online') {
-// 			this._addWork();
-// 		}
-// 	},
-// 	_addWork: function() {
-// 		var Self = this;
-// 		this.workQueue.forEach(function(work) {
-// 			Self.worker.send(work.msg, work.socket);
-// 		});
-// 		this.workQueue.length = 0;
-// 	},
-// 	createWorker: function() {
-// 		var worker,	
-// 			Self = this;
-
-// 		if(Self.retryCount > 10) {
-// 			console.log('retryTimes');
-// 			return;
-// 		}
-
-// 		worker = this.worker = cluster.fork();
-// 		worker.on('exit', function() {
-// 			Self.status = 'exit';
-// 			setTimeout(function() {
-// 				Self.createWorker();
-// 			}, 500);
-// 		});
-// 		worker.on('online', function() {
-// 			if(Self.sendToSetup) {
-// 				worker.send({'setup': JSON.stringify(Self.sendToSetup)});
-// 			}
-// 			Self.status = 'online';
-// 			Self._addWork();
-// 		});
-// 	},
-// 	setSetup: function(setup) {
-// 		this.sendToSetup = setup;
-// 		if(this.worker) {
-// 			worker.send({'setup': JSON.stringify(setup)});
-// 		}
-// 	}
-// };
 
 function getProvision(u, list) {
 	var parse = url.parse(u),
@@ -216,9 +162,6 @@ function _reRequest(request, response, opt) {
 
 function main(options) {
 	if(options.length) {
-		// workerManager.setSetup(_prevSetup(options));
-		// workerManager.createWorker();
-
 		console.log('');
 		console.log('  server starting...');
 		console.log('');
@@ -257,12 +200,6 @@ function startServer(option) {
 				}
 			} else {
 				_reRequest(request, response, option);
-				// var opt = url.parse(request.url);
-				// opt.headers = request.headers;
-				// // 转发请求
-				// workerManager.addWork({
-				// 	request: JSON.stringify(opt)
-				// });
 			}
 		}
 	}).on('error', function(err) {
@@ -275,60 +212,3 @@ function startServer(option) {
 }
 
 module.exports = main;
-
-// var cluster = require('cluster'),
-// 	fs = require('fs'),
-// 	config = jt.config.proxy,
-// 	list = jt.getConfig('proxy');
-
-// if(cluster.isMaster) {
-// 	// 指定子进程参数
-// 	cluster.setupMaster({
-// 		args:[
-// 			'--proxy'
-// 		]
-// 	});
-
-// 	console.log('');
-// 	console.log('  server starting...');
-// 	console.log('');
-// 	console.log('  usage:');
-// 	console.log('    set you brower proxy through:	http://localhost:[port]');
-// 	console.log('');
-// 	if(jt.argv.proxy.length) {
-// 		console.log('  enabled proxy log');
-// 		console.log('');
-// 	}
-
-// 	for(var i in config.port) {
-// 		worker({port: i, first: true, log: jt.argv.proxy.length});
-// 	}
-
-// 	function worker(cfg) {
-// 		var workerProcess = cluster.fork();
-// 		workerProcess.send(cfg);
-// 		workerProcess.on('exit', function() {
-// 			setTimeout(function() {
-// 				worker({port: cfg.port, log: jt.argv.proxy.length});
-// 			}, 500);
-// 		});
-// 	};
-// } else {
-
-// 	process.on('message', function(cfg) {
-// 		if(!list[config.port[cfg.port]]) {
-// 			console.log('  not found '.red+(config.port[cfg.port]).toString().yellow+' proxy rule in .jt/proxy.js'.red);
-// 			return;
-// 		}
-// 		if(!cfg.first) {
-// 			console.log(('proxy server [' + config.port[cfg.port] + '] was restart.').green);
-// 		} else {
-// 			console.log('    port[' + cfg.port + ']: ' + list[config.port[cfg.port]].description||'');
-// 		}
-// 		require('./server.js')(cfg.port, cfg.log);
-// 		// 监视文件改动
-// 		fs.watchFile(jt.cwd, function() {
-// 			cluster.worker.kill();
-// 		});
-// 	});
-// }

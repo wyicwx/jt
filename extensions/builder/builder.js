@@ -1,23 +1,23 @@
 var path = require('path'),
-	config  = jt.config.builder,
+	projects  = jt.config.project,
 	builder = module.exports = {};
 
 
 builder.getFilesByProject = function(project) {
 	if(builder.hasProject(project)) {
-		return config.list[project].files;
+		return projects[project].files;
 	}
 };
 
 builder.getAllProject = function() {
-	return jt.utils.keys(config.list);
+	return jt.utils.keys(projects);
 };
 
 builder.build = function(project) {
 	if(builder.hasProject(project)) {
 		var filesStream = [];
 
-		config.list[project].files.forEach(function(filename) {
+		projects[project].files.forEach(function(filename) {
 			filesStream.push(jt.fs.createReadStream(filename));
 		});
 
@@ -28,7 +28,7 @@ builder.build = function(project) {
 };
 
 builder.hasProject = function(project) {
-	if(project in config.list) {
+	if(project in projects) {
 		return true;
 	} else {
 		return false;
@@ -37,7 +37,7 @@ builder.hasProject = function(project) {
 
 // 格式化所有文件路径
 (function() {
-	jt.utils.each(config.list, function(projectContent, project) {
+	jt.utils.each(projects, function(projectContent, project) {
 		if(projectContent.output) {
 			projectContent.output = jt.fs.pathConverter(projectContent.output);
 		}
@@ -64,7 +64,7 @@ builder.hasProject = function(project) {
 		} else {
 			console.log('');
 			console.log('  Projects:');
-			jt.utils.each(config.list, function(value, key) {
+			jt.utils.each(projects, function(value, key) {
 				console.log('    ' + jt.utils.fill(key, 40, ' ', true).yellow + (value.description||''));
 			});
 			console.log('');
@@ -85,7 +85,7 @@ builder.hasProject = function(project) {
 					done();
 				});
 
-				var projectObj = config.list[project];
+				var projectObj = projects[project];
 				var files = builder.getFilesByProject(project);
 				
 				var filesStream = builder.build(project);

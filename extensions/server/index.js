@@ -51,9 +51,6 @@ function parse() {
 	}
 
 	var servers = jt.config.server;
-	if(!jt.utils.isArray(servers)) {
-		servers = [servers];
-	}
 
 	servers.forEach(function(sv) {
 		sv.list = _dealList(sv.list);
@@ -63,7 +60,12 @@ function parse() {
 		OPTIONS.push(sv);
 	});
 }
-
+// 格式化
+(function() {
+	if(!jt.utils.isArray(jt.config.server)) {
+		jt.config.server = [jt.config.server];
+	}
+})();
 // support for commander
 (function() {
 
