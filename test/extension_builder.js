@@ -38,10 +38,13 @@ jt.config.fs = {
 jt.config.project = {
 	'Aproject': {
 		files: [
-			"a.js",
-			"b.js",
-			"c.js"
+			"fs/a.js",
+			"fs/b.js",
+			"fs/c.js"
 		]
+	},
+	'Bproject': {
+		files: []
 	}
 };
 
@@ -84,7 +87,60 @@ describe('extension builder', function() {
 	});
 
 	describe('#build()', function() {
-		it('', function() {
+		it('it has data return true, return false by not data', function() {
+			var returnA = builder.build('Aproject');
+			var returnB = builder.build('AAproject');
+
+			if(returnA === true && returnB === false) {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
+		});
+
+		it('it return project files count', function(done) {
+			builder.build('Aproject', function(datas) {
+				if(datas.length == builder.getFilesByProject('Aproject').length) {
+					done();
+				} else {
+					done(false);
+				}
+			});
+		});
+	});
+
+	describe('#buildStream()', function() {
+		it('it has project return array, return null by not project', function() {
+			var returnA = builder.buildStream('Aproject');
+			var returnB = builder.buildStream('AAproject');
+			var returnC = builder.buildStream('Bproject');
+
+			if(jt.utils.isArray(returnA) && jt.utils.isArray(returnC) && jt.utils.isNull(returnB)) {
+				if(returnA.length && !returnC.length) {
+					assert.ok(true);
+					return;
+				}
+			}
+			assert.ok(false);
+		});
+
+		it('it return a count stream', function(done) {
+			var ret = builder.buildStream('Aproject');
+			var app = jt.utils.do();
+
+			ret.forEach(function(stream) {
+				app.do(function(done) {
+					stream.resume();
+					
+					stream.on('end', function() {
+						done()
+					});
+				});
+			});
+
+			app.done(function() {
+				done();
+			});
 
 		});
 	});

@@ -13,7 +13,7 @@ builder.getAllProject = function() {
 	return jt.utils.keys(projects);
 };
 
-builder.build = function(project) {
+builder.buildStream = function(project) {
 	if(builder.hasProject(project)) {
 		var filesStream = [];
 
@@ -24,6 +24,32 @@ builder.build = function(project) {
 		return filesStream;
 	} else {
 		return null;
+	}
+};
+
+builder.build = function(project, callback) {
+	var files = [],
+		app = jt.utils.do();
+
+	if(builder.hasProject(project)) {
+
+		projects[project].files.forEach(function(filename) {
+			
+			app.do(function(done) {
+				jt.fs.readFile(filename, function(buffer) {
+					files.push(buffer);
+					done();
+				});
+			});
+
+		});
+
+		app.done(function() {
+			callback && callback(files);
+		});
+		return true;
+	} else {
+		return false;
 	}
 };
 
@@ -88,7 +114,7 @@ builder.hasProject = function(project) {
 				var projectObj = projects[project];
 				var files = builder.getFilesByProject(project);
 				
-				var filesStream = builder.build(project);
+				var filesStream = builder.buildStream(project);
 
 				filesStream.forEach(function(stream, key) {
 					app.do(function(done) {
