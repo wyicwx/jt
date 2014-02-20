@@ -5,7 +5,7 @@ var http = require('http'),
 
 var OPTIONS = [];
 
-function parse() {
+function _init() {
 	if(OPTIONS.length) {
 		return;
 	}
@@ -73,13 +73,13 @@ function parse() {
 		cmd: 'server',
 		description: 'start server',
 		handler: function() {
-			parse();
+			init();
 
 			require('./server.js')(OPTIONS);
 			
 		}
 	});
-
+})();
 	// jt.commander.define({
 	// 	cmd: 'check [port],[url]',
 	// 	description: 'rule test',
@@ -137,4 +137,3 @@ function parse() {
 	// 		}
 	// 	}
 	// });
-})();

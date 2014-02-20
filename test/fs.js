@@ -31,7 +31,8 @@ jt.config.fs = {
 				"value": "string"
 			}],
 			"testForSearch.js": "a.js",
-			"reTestForSearch.js": "a.js"
+			"reTestForSearch.js": "a.js",
+			"toRemove.js": "a.js"
 		}
 	}
 };
@@ -222,6 +223,22 @@ describe('jt.fs', function() {
 			} else {
 				assert.ok(false);
 			}
+		});
+	});
+
+	describe('#map2local()', function() {
+		it('it exist in real file system', function(done) {
+			var filename = jt.fs.pathConverter('fs/toRemove.js');
+			if(fs.existsSync(filename)) {
+				fs.unlinkSync(jt.fs.pathConverter(filename));
+			}
+
+			jt.fs.map2local(filename, function() {
+				if(fs.existsSync(filename)) {
+					done();
+					fs.unlinkSync(jt.fs.pathConverter(filename));
+				}
+			});
 		});
 	});
 
