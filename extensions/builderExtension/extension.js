@@ -22,3 +22,14 @@ jt.fs.processorDefine('Html2String', function(data, next, done) {
 		next(data);
 	});
 });
+
+// defineHtml
+jt.fs.processorDefine('defineHtml', function(data, done) {
+	var dir = path.join(data.dir, data.value);
+	jt.fs.readFile(dir, function(buffer) {
+		html = _escapeHtml(buffer.toString());
+
+		data = 'define("'+data.name+'", "'+html+'");';
+		done(data);
+	});
+});
