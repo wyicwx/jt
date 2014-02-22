@@ -1,26 +1,14 @@
-var jtconfig = {
-	base: '../',
+var config = {
+	base: '../', 
 	fs: {
-		list: {},
+		list: require('./fs.js'),
 		ignorePath: []
 	},
-	project: {
-		list: []
-	},
-	server: {
-		slowSpeedSimulate: {
-			enable: false,
-			highWaterMark: 100,
-			interval: 10,
-		},
-		port: 8080,
-		description: 'description',
-		list: {},
-		hosts: {}
-	},
-	processor: {
+	project: require('./project.js'),
+	server: require('./server.js'),
+	compressor: {
 		gzip: true
 	}
 };
 
-module.exports = jtconfig;
+module.exports = config;

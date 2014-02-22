@@ -1,12 +1,4 @@
-var target = {};
-
-target['http://([^\\/]+)/(.*)js($)'] = {
-	respond: [
-		'$2.js'
-	]
-};
-
-module.exports = {
+var server = {
 	slowSpeedSimulate: {
 		enable: false,
 		highWaterMark: 100,
@@ -14,6 +6,14 @@ module.exports = {
 	},
 	port: 8080,
 	description: 'default',
-	list: target,
+	list: {},
 	hosts: {}
 };
+
+server.list['http://([^\\/]+)/(.*)js($)'] = {
+	respond: [
+		'$2.js'
+	]
+};
+
+module.exports = server;
