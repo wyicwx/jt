@@ -1,48 +1,12 @@
 var assert = require('assert'),
 	fs = require('fs'),
-	path = require('path'),
-	rewire = require('rewire');
+	path = require('path');
 
-require('../lib/kernel.js');
-jt.config = require('../configs/config.js');
-jt.config.base = path.resolve(__dirname);
-jt.config.fs = {
-	list : {
-		"fs/": {
-			"c.js": [
-				"a.js",
-				"b.js"
-			],
-			"d.js": "d.js",
-			"e.js": "a.js",
-			"f.js": [{
-				"processor": "string",
-				"value": "string"
-			}],
-			"g.js": [
-				'c.js',
-				'f.js'
-			],
-			"h.js": [{
-				"processor": "notDefine"
-			}],
-			"i.js": [{
-				"processor": "string",
-				"value": "string"
-			}],
-			"testForSearch.js": "a.js",
-			"reTestForSearch.js": "a.js",
-			"toRemove.js": "a.js"
-		}
-	}
-};
-
-
-jt.fs = rewire('../lib/fs.js');
+require('./_common.js');
 
 describe('jt.fs', function() {
 	describe('#pretreatment', function() {
-		it('flatten jt.config.fs must not be change', function() {
+		it('jt.config.fs.list需要格式化成完整路径', function() {
 			['c.js', 'd.js', 'e.js', 'f.js', 'g.js', 'h.js', 'i.js'].forEach(function(name) {
 				if(path.join(jt.config.base, "fs/"+name) in jt.config.fs.list) {
 					assert.ok(true);
@@ -52,18 +16,12 @@ describe('jt.fs', function() {
 			});
 		});
 
-		it('define processor', function() {		
-			jt.fs.processorDefine('string', function(data) {
-				this.next(data.value);
-			});			
-		});
-
 		it('run processor', function(done) {
 			jt.fs.readFile('fs/f.js', function(data) {
 				if(data.toString() == 'string') {
 					done();
 				} else {
-					done(true);
+					done(false);
 				}
 			});
 		});
@@ -73,10 +31,10 @@ describe('jt.fs', function() {
 				if(data.toString() == '') {
 					done();
 				} else {
-					done(true);
+					done(false);
 				}
 			});
-		})
+		});
 	});
 
 	describe('#createReadStream()', function() {
@@ -104,8 +62,8 @@ describe('jt.fs', function() {
 				chunk = Buffer.concat(chunk);
 				var a = fs.readFileSync(path.join(jt.root, 'test/fs/a.js'));
 				var b = fs.readFileSync(path.join(jt.root, 'test/fs/b.js'));
-
-				if(chunk.toString() == a+b) {
+				var ret = Buffer.concat([a, new Buffer('\n'), b]);
+				if(chunk.toString() == ret.toString()) {
 					done();
 				} else {
 					done(true);
@@ -132,6 +90,7 @@ describe('jt.fs', function() {
 				}
 			});
 		});
+
 	});
 
 	describe('#readFile()', function() {
@@ -152,6 +111,43 @@ describe('jt.fs', function() {
 						done(true);
 					}
 				});
+			});
+		});
+
+		it('support processor option\'s file is be read', function(done) {
+			jt.fs.readFile('fs/j.js', function(data) {
+				if(data.toString() == 'string') {
+					done();
+				} else {
+					done(false);
+				}
+			});
+		});
+
+		it('对processor支持多个参数多processor，并将结果串行传递', function(done) {
+			jt.fs.processorDefine('test1', function(data, opt, done) {
+				var data = data.toString();
+
+				data += '1';
+				done(data);
+			});
+
+			jt.fs.readFile('fs/k.js', function(buffer) {
+				if(buffer.toString() == '01') {
+					done();
+				} else {
+					done(false);
+				}
+			});
+		});
+
+		it('处理器的file参数多重引用的支持', function(done) {
+			jt.fs.readFile('fs/l.js', function(buffer) {
+				if(buffer.toString() == 'define("test", "string");') {
+					done();
+				} else {
+					done(false);
+				}
 			});
 		});
 	});
@@ -244,13 +240,13 @@ describe('jt.fs', function() {
 
 	describe('private function', function() {
 		it('#_map2combo(), prevent duplicate references to cause a stack overflow', function() {
-			jt.fs.__get__('_map2combo')('fs/d.js');
+			jt.privateFs.__get__('_map2combo')('fs/d.js');
 		});
 
 		describe('#_readSimpleFile()', function() {		
 			var filename = path.join(jt.root, 'test/fs/fs.js');
 			it('it use fs.readFile but not file return null', function(done) {
-				jt.fs.__get__('_readSimpleFile')(filename, function(data) {
+				jt.privateFs.__get__('_readSimpleFile')(filename, function(data) {
 					if(data.toString() === '') {
 						done();
 					} else {
@@ -260,7 +256,7 @@ describe('jt.fs', function() {
 			});
 
 			it('it must return buffer', function(done) {
-				jt.fs.__get__('_readSimpleFile')(filename, function(data) {
+				jt.privateFs.__get__('_readSimpleFile')(filename, function(data) {
 					if(Buffer.isBuffer(data)) {
 						done();
 					} else {

@@ -196,6 +196,17 @@ compressor.css = function(buffer, callback) {
 	return buffer;
 };
 
+compressor.html = function(buffer, callback) {
+	var str = buffer.toString();
+
+	str = str.toString()
+			 .replace(/(\n|\r)/g, "") //del \n
+			 .replace(/>([\x20\t]+)</g, "><") //del blank & tab
+			 .replace(/<!--.+?-->/g, "") // del comment
+			 .replace(/^\s+|\s+$/g, "") // trim blank
+	
+	callback(str);
+};
 /**
  * 清理tmp文件夹
  * @param  {Function} callback 回掉
@@ -254,6 +265,14 @@ compressor.compress = function(files, callback) {
 	});
 };
 
+// fs处理器扩展
+(function() {
+	jt.fs.processorDefine('compressHtml', function(data, opt, done) {
+		compressor.html(data, function(result) {
+			done(result);
+		});
+	});
+})();
 
 (function() {
 	jt.commander.define({

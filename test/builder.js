@@ -1,58 +1,10 @@
 var assert = require('assert'),
 	fs = require('fs'),
-	path = require('path'),
-	rewire = require('rewire');
+	path = require('path');
 
-require('../lib/kernel.js');
-jt.config = require('../configs/config.js');
-jt.config.base = path.resolve(__dirname);
-jt.config.fs = {
-	list : {
-		"fs/": {
-			"c.js": [
-				"a.js",
-				"b.js"
-			],
-			"d.js": "d.js",
-			"e.js": "a.js",
-			"f.js": [{
-				"processor": "string",
-				"value": "string"
-			}],
-			"g.js": [
-				'c.js',
-				'f.js'
-			],
-			"h.js": [{
-				"processor": "notDefine"
-			}],
-			"i.js": [{
-				"processor": "string",
-				"value": "string"
-			}],
-			"testForSearch.js": "a.js",
-			"reTestForSearch.js": "a.js"
-		}
-	}
-};
-jt.config.project = {
-	'Aproject': {
-		files: [
-			"fs/a.js",
-			"fs/b.js",
-			"fs/c.js"
-		]
-	},
-	'Bproject': {
-		files: []
-	}
-};
+var builder = jt.builder;
 
-jt.init();
-
-var builder = jt.extensions.builder.exports;
-
-describe('extension builder', function() {
+describe('jt.builder', function() {
 	it('#getFilesByProject()', function() {
 		var files = builder.getFilesByProject('Aproject');
 		if(files.length == 3) {
