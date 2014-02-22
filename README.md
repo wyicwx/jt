@@ -11,6 +11,10 @@ npm install -g jt-cli
 jt init
 ```
 
+##DOC
+
+see [document](http://wyicwx.github.io/jt/)
+
 ##LICENSES
 
 The MIT License (MIT)
