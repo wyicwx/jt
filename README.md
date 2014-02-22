@@ -1,17 +1,17 @@
 # JT 
 > Javascript developer toolkit, based on virtual file system.
 
-#####INSTALL
+##INSTALL
 
 ```shell
 npm install -g jt-cli
 ```
-#####QUICK START
+##QUICK START
 ```shell
 jt init
 ```
 
-#####LICENSES
+##LICENSES
 
 The MIT License (MIT)
 
