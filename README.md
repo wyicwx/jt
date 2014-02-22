@@ -1,11 +1,17 @@
 # JT 
-> The javascript develop toolkit command line interface.
+> Javascript developer toolkit, based on virtual file system.
+
+#####INSTALL
 
 ```shell
 npm install -g jt-cli
 ```
+#####QUICK START
+```shell
+jt init
+```
 
-###LICENSES
+#####LICENSES
 
 The MIT License (MIT)
 
