@@ -175,7 +175,7 @@ compressor.js = function(buffer, callback) {
 		console.log('');
 		callback(data);
 	});
-}
+};
 
 /**
  * 最小化压缩css
@@ -191,11 +191,22 @@ compressor.css = function(buffer, callback) {
 	s = s.match(/^\s*(\S+(\s+\S+)*)\s*$/); //去掉首尾空白
 	s = (s == null) ? "" : s[1];
 
-	buffer = new jt.utils.BufferHelper(s);
+	buffer = new Buffer(s);
 
-	return buffer.toBuffer();
-}
+	return buffer;
+};
 
+compressor.html = function(buffer, callback) {
+	var str = buffer.toString();
+
+	str = str.toString()
+			 .replace(/(\n|\r)/g, "") //del \n
+			 .replace(/>([\x20\t]+)</g, "><") //del blank & tab
+			 .replace(/<!--.+?-->/g, "") // del comment
+			 .replace(/^\s+|\s+$/g, "") // trim blank
+	
+	callback(str);
+};
 /**
  * 清理tmp文件夹
  * @param  {Function} callback 回掉
@@ -252,4 +263,76 @@ compressor.compress = function(files, callback) {
 	app.fire(function() {
 		callback && callback(result);
 	});
-}
+};
+
+// fs处理器扩展
+(function() {
+	jt.fs.processorDefine('compressHtml', function(data, opt, done) {
+		compressor.html(data, function(result) {
+			done(result);
+		});
+	});
+})();
+
+(function() {
+	jt.commander.define({
+		cmd: '-c, --compress [file1],[file2],...',
+		description: 'js/css file minify compress',
+		handler: function() {
+			if(jt.utils.size(jt.argv.compress)) {
+				jt.builder.finder(jt.argv.compress, {
+					project: false,
+					pathFile: true
+				},function(filePaths) {
+					if(filePaths.pathFile.length) {
+						console.log('');
+						console.log('  查找到以下文件:');
+						filePaths.pathFile.forEach(function(value, key) {
+								console.log(('    ['+key+'] ').red+ value.green);
+						});
+						jt.utils.read('  输入需要压缩的文件，使用","分割', function(data) {
+							if(!data) {
+								console.log('');
+								console.log('  压缩中断!');
+								return;
+							}
+							var index = data.split(','),
+								files;
+
+							files = jt.utils.pick(filePaths.pathFile, index);
+							files = jt.utils.values(files);
+							
+							if(!files.length) return;
+							jt.pipe.trigger('jt.compress.before', files,function() {
+								jt.compressor.compress(files, function(data) {
+									var saveInfo = {};
+									jt.utils.each(files, function(path, key) {
+										// 重命名
+										var aliasnName = path.replace(/(\w+?)$/, 'min.$1');
+
+										if(data[key] && data[key].code) {
+											saveInfo[aliasnName] = data[key].code;
+										} else {
+											saveInfo[aliasnName] = null;
+										}
+									});
+									// 保存下来
+									jt.builder.save(saveInfo, {
+										endCallback: function() {
+										}
+									});
+								});
+							});
+						});
+					} else {
+						console.log('sorry,没有找到任何文件!');
+					}
+				});
+			} else {
+				console.log('');
+				console.log("    error: option `%s' argument missing", '-c, --compress');
+				console.log('');
+			}
+		}
+	});
+})();

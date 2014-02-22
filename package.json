@@ -2,10 +2,10 @@
 	"name": "jt-cli",
 	"version": "0.0.3",
 	"description": "javascript develop tool",
-	"author": "wyicwx (http://weibo.com/simplemaple)",
-	"main": "main.js",
-	"directories": {
-		"test": "test"
+	"author": {
+		"name": "wyicwx",
+		"email": "wyicwx@gmail.com",
+		"web":  "http://weibo.com/simplemaple"
 	},
 	"dependencies": {
 		"colors": "~0.6.1",
@@ -15,9 +15,18 @@
 		"uglify-js": "~2.4.0",
 		"yuicompressor": "~2.4.8"
 	},
-	"devDependencies": {},
+	"devDependencies": {
+		"mocha": "*",
+		"blanket": "*",
+		"rewire": "*"
+	},
 	"scripts": {
-		"test": "mocha"
+		"test": "make test-all"
+	},
+	"config": {
+		"blanket": {
+			"pattern": "jt/lib"
+		}
 	},
 	"repository": {
 		"type": "git",

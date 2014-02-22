@@ -26,6 +26,41 @@ function checkJtConfig() {
 	return false;
 }
 
+// init
+jt.commander.define({
+	cmd: 'init', 
+	description: 'init jt config file',
+	notShow: true,
+	handler: function(opt, argv) {
+		var fs = require('fs'),
+			path = require('path');
+
+		jt.utils.mkdir('.jt/extensions', './');
+
+		function cpFile() {
+			['config.js', 'builder.js', 'proxy.js'].forEach(function(file) {
+				var defaultConfig = fs.createReadStream(path.join(jt.root, 'configs/'+file));
+				var targetConfig = fs.createWriteStream('./.jt/'+file);
+				defaultConfig.pipe(targetConfig, {
+					flags: 'w',
+					encoding: 'utf-8',
+					mode: '755'
+				});
+			});
+		}
+		if(!fs.existsSync('./.jt/config.js')) {
+			cpFile();
+		} else {
+			jt.utils.read('  config was existed.\n  Are you want override config.js by default? yes(Y) or no(N)', function(reply) {
+				if(reply == 'Y') {
+					cpFile();
+					console.log('  override.');
+				}
+			});
+		}
+	}
+});
+
 // use jt init command 
 if(jt.argv.init) {
 	jt.commander.trigger('init');
@@ -33,6 +68,7 @@ if(jt.argv.init) {
 	var cwd = checkJtConfig();
 	if(cwd) {
 		jt.cwd = cwd;
+		jt.config = require(path.join(jt.cwd, '/config.js'));
 		jt.init();
 		jt.run();
 	} else {

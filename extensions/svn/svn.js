@@ -1,5 +1,5 @@
 var Exec = require('child_process').exec;
-
+return;
 jt.pipe.hook('jt.compress.before', function(path, next, done) {
 	var command = 'svn update ' + jt.config.builder.base;
 
