@@ -4,3 +4,6 @@
 ```shell
 npm install -g jt-cli
 ```
+
+###LICENSES
+[MIT license](http://opensource.org/licenses/MIT)
