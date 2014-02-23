@@ -168,17 +168,17 @@ describe('jt.fs', function() {
 	});
 
 	describe('#search()', function() {
-		it('could be search file while exist in real file system', function() {
+		it('could be search file while exist in real file system', function(done) {
 			jt.fs.search('c.js', function(data) {
 				if(jt.fs.isVirtual(data[0])) {
-					assert.ok(true);
+					done();
 				} else {
-					assert.ok(false);
+					done(false);
 				}
 			});
 		});
 
-		it('it search virtual result must be in virtual file system', function() {
+		it('it search virtual result must be in virtual file system', function(done) {
 			jt.fs.search('b.js', function(data) {
 				var file = jt.fs.pathConverter('fs/b.js'),
 					hasFile = false;
@@ -190,9 +190,49 @@ describe('jt.fs', function() {
 				});
 
 				if(hasFile) {
-					assert.ok(true);
+					done();
 				} else {
-					assert.ok(false);
+					done(false);
+				}
+			});
+		});
+
+		it('搜索回调只会触发一次', function(done) {
+			var fired = false;
+
+			jt.fs.search('c.js', function(data) {
+				if(fired) {
+					done(false);
+				} else {
+					fired = true;
+					setTimeout(function() {
+						done();
+					}, 2000);
+				}
+			});
+		});
+
+		it('ignorePath不会被搜索到', function(done) {
+			jt.fs.search('ignoreFile.js', function(data) {
+
+				console.log(data);
+				if(data.length) {
+					done(false);
+				} else {
+					done();
+				}
+			});
+		});
+
+		it('搜索结果没有重复项', function(done) {
+			jt.fs.search('a.js', function(data) {
+				var length = data.length;
+				data = jt.utils.uniq(data);
+
+				if(data.length == length) {
+					done();
+				} else {
+					done(false);
 				}
 			});
 		});

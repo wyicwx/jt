@@ -13,7 +13,8 @@
 		"mime": "~1.2.11",
 		"mutils": "~0.0.5",
 		"uglify-js": "~2.4.0",
-		"yuicompressor": "~2.4.8"
+		"yuicompressor": "~2.4.8",
+		"less": "~1.6.3"
 	},
 	"devDependencies": {
 		"mocha": "*",

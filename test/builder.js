@@ -2,6 +2,7 @@ var assert = require('assert'),
 	fs = require('fs'),
 	path = require('path');
 
+require('./_common.js');
 var builder = jt.builder;
 
 describe('jt.builder', function() {

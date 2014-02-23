@@ -9,6 +9,14 @@ jt.config.base = path.resolve(__dirname);
 var fsConfig = fs = {
 	list : {
 		"fs/": {
+			"ignore/": {
+				"ignoreFile.js": [
+					"../a.js"
+				],
+				"a.js": [
+					"../a.js"
+				]
+			},
 			"c.js": [
 				"a.js",
 				"b.js"
@@ -47,7 +55,10 @@ var fsConfig = fs = {
 			"reTestForSearch.js": "a.js",
 			"toRemove.js": "a.js"
 		}
-	}
+	},
+	ignorePath: [
+		"fs/ignore"
+	]
 };
 jt.config.project = {
 	'Aproject': {
