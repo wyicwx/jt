@@ -1,6 +1,6 @@
 # JT 
 > Javascript developer toolkit, based on virtual file system.
-
+![travis](https://api.travis-ci.org/wyicwx/jt.png)
 ##INSTALL
 
 ```shell
