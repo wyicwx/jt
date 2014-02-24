@@ -36,12 +36,17 @@
 
 <p>为web开发者提供开发javascript辅助开发及半自动化工具集。</p>
 
-<p>具有如下特性：</p>
+<p>具有以下功能</p>
 
 <ul>
-<li>代理服务</li>
+<li>http服务</li>
 <li>项目构建</li>
+<li>极限压缩</li>
 <li>插件支持</li>
+</ul><p>具有以下特性</p>
+
+<ul>
+<li>
 </ul><h2>
 <a name="%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8" class="anchor" href="#%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8"><span class="octicon octicon-link"></span></a>快速入门</h2>
 
@@ -75,6 +80,25 @@
    └────server.js
 </code></pre>
 
+<ul>
+<li>友好命令行界面</li>
+</ul><p>执行 jt -h 查看相关帮助</p>
+
+<pre><code>  Usage: jt [options] &lt;arguments&gt;
+
+  Command:
+
+    info                                    show jt config infomation
+    server                                  start server
+
+  Option:
+
+    -b, --build project [project2] ...      build project
+    -l, --list [project]                    show project's list
+    -c, --compress [file]...                js/css file minify compress
+    -m, --match port url                    match url to server rule
+</code></pre>
+
 <h2>
 <a name="%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6" class="anchor" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="octicon octicon-link"></span></a>配置文件</h2>
 
@@ -84,6 +108,11 @@
 <a name="%E6%89%A9%E5%B1%95%E5%BC%80%E5%8F%91" class="anchor" href="#%E6%89%A9%E5%B1%95%E5%BC%80%E5%8F%91"><span class="octicon octicon-link"></span></a>扩展开发</h2>
 
 <p>所提供的api？</p>
+
+<h2>
+<a name="%E5%85%B3%E4%BA%8E" class="anchor" href="#%E5%85%B3%E4%BA%8E"><span class="octicon octicon-link"></span></a>关于</h2>
+
+<p>开发JT的初衷只是为了弥补os x下没有fiddler的autoresponder功能的缺陷，原先只是一个简单的代理程序，但随着应用面不断的扩大，需要应付的场景越来越复杂，于是有了这个项目。</p>
       </section>
     </div>
 
