@@ -122,21 +122,43 @@
 
 <pre><code>var fileSystem = {
     'folder': {
-        'folder': {
-            'file': [
-                'file', {
-                    'compressor': 'string',
-                    'value': 'string'
-                }
-            ]
-        }
+        'file': [
+            'file', {
+                'compressor': 'string',
+                'value': 'string'
+            }
+        ]
     }
 };
 </code></pre>
 
 <p><em>project.js</em></p>
 
+<pre><code>var project = {
+    'project': {
+        'description': 'project\' description',
+        'files': [
+            'fileA',
+            'fileB'
+        ]
+    }
+};
+</code></pre>
+
 <p><em>server.js</em></p>
+
+<pre><code>var server = {
+    slowSpeedSimulate: {
+        enable: false,
+        highWaterMark: 100,
+        interval: 10,
+    },
+    port: 8080,
+    description: 'default',
+    list: {},
+    hosts: {}
+};
+</code></pre>
 
 <p>配置匹配</p>
 
