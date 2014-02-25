@@ -39,7 +39,7 @@
 <p>具有以下功能与特性：</p>
 
 <ul>
-<li>http服务</li>
+<li>代理服务</li>
 <li>项目构建</li>
 <li>极限压缩</li>
 <li>插件支持</li>
@@ -98,7 +98,47 @@
 <h2>
 <a name="%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6" class="anchor" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="octicon octicon-link"></span></a>配置文件</h2>
 
-<p>为何需要</p>
+<p><em>config.js</em></p>
+
+<pre><code>var config = {
+    base: '../', 
+    fs: {
+        list: require('./fs.js'),
+        ignorePath: []
+    },
+    project: require('./project.js'),
+    server: require('./server.js'),
+    compressor: {
+        gzip: true
+    }
+};
+</code></pre>
+
+<p>base 指定文件夹路径，配置文件内所有相对路径都以该目录作为相对目录。这里推荐指定存放静态文件的目录为base路径。</p>
+
+<p>compressor.gzip 压缩器在压缩文件时是否按gzip格式压缩判断</p>
+
+<p><em>fs.js</em></p>
+
+<pre><code>var fileSystem = {
+    'folder': {
+        'folder': {
+            'file': [
+                'file', {
+                    'compressor': 'string',
+                    'value': 'string'
+                }
+            ]
+        }
+    }
+};
+</code></pre>
+
+<p><em>project.js</em></p>
+
+<p><em>server.js</em></p>
+
+<p>配置匹配</p>
 
 <h2>
 <a name="%E6%89%A9%E5%B1%95%E5%BC%80%E5%8F%91" class="anchor" href="#%E6%89%A9%E5%B1%95%E5%BC%80%E5%8F%91"><span class="octicon octicon-link"></span></a>扩展开发</h2>
