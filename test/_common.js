@@ -17,6 +17,20 @@ var fsConfig = fs = {
 					"../a.js"
 				]
 			},
+			"compressor": {
+				"a.css": [{
+					"processor": "compressCss",
+					"file": "fs/a.css"
+				}],
+				"a.js": [{
+					"processor": "compressJs",
+					"file": "fs/a.js"
+				}],
+				"a.html": [{
+					"processor": "compressHtml",
+					"file": "fs/a.html"
+				}]
+			},
 			"c.js": [
 				"a.js",
 				"b.js"
@@ -70,6 +84,13 @@ jt.config.project = {
 	},
 	'Bproject': {
 		files: []
+	},
+	'Cproject': {
+		files: [
+			"fs/h.js",
+			"fs/i.js",
+			"fs/k.js"
+		]
 	}
 };
 
@@ -78,3 +99,4 @@ jt.config.fs = jt.utils.clone(fsConfig);
 jt.init();
 jt.config.fs = jt.utils.clone(fsConfig);
 jt.privateFs = rewire('../lib/fs.js');
+jt.privateServer = rewire('../lib/server.js');

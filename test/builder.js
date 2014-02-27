@@ -86,7 +86,7 @@ describe('jt.builder', function() {
 					stream.resume();
 					
 					stream.on('end', function() {
-						done()
+						done();
 					});
 				});
 			});
@@ -95,6 +95,28 @@ describe('jt.builder', function() {
 				done();
 			});
 
+		});
+	});
+
+	describe('#build2local()', function() {
+		it('本地有生成对应的文件', function(done) {
+			jt.builder.build2local('Cproject', function() {
+				var files = jt.builder.getFilesByProject('Cproject');
+				var has = true;
+				files.forEach(function(file) {
+					if(fs.existsSync(file)) {
+						fs.unlinkSync(file);
+					} else {
+						has = false;
+					}
+				});
+
+				if(has) {
+					done();
+				} else {
+					done(false);
+				}
+			});
 		});
 	});
 });

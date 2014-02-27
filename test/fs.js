@@ -214,8 +214,6 @@ describe('jt.fs', function() {
 
 		it('ignorePath不会被搜索到', function(done) {
 			jt.fs.search('ignoreFile.js', function(data) {
-
-				console.log(data);
 				if(data.length) {
 					done(false);
 				} else {
