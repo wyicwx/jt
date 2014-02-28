@@ -8,7 +8,7 @@ var builder = jt.builder;
 describe('jt.builder', function() {
 	it('#getFilesByProject()', function() {
 		var files = builder.getFilesByProject('Aproject');
-		if(files.length == 3) {
+		if(jt.config.project.Aproject.files.length == files.length) {
 			assert.ok(true);
 		} else {
 			assert.ok(false);
@@ -99,15 +99,17 @@ describe('jt.builder', function() {
 	});
 
 	describe('#build2local()', function() {
-		it('本地有生成对应的文件', function(done) {
+		it('本地有生成对应的映射列表里的文件', function(done) {
 			jt.builder.build2local('Cproject', function() {
 				var files = jt.builder.getFilesByProject('Cproject');
 				var has = true;
 				files.forEach(function(file) {
-					if(fs.existsSync(file)) {
-						fs.unlinkSync(file);
-					} else {
-						has = false;
+					if(jt.fs.isVirtual(file)) {
+						if(fs.existsSync(file)) {
+							fs.unlinkSync(file);
+						} else {
+							has = false;
+						}
 					}
 				});
 
@@ -117,6 +119,56 @@ describe('jt.builder', function() {
 					done(false);
 				}
 			});
+		});
+
+		it('没有找到相应project返回null，并且不会触发callback', function(done) {
+			var triggedCallback = false;
+			var d = jt.builder.build2local('Nullproject', function() {
+				triggedCallback = true;
+			});
+
+			if(!d) {
+				setTimeout(function() {
+					if(triggedCallback) {
+						done(false);
+					} else {
+						done();
+					}
+				}, 2000);
+			} else {
+				done(false);
+			}
+		});
+	});
+
+	describe('commander', function() {
+		it('-l, --list', function() {
+			jt.commander.trigger('list', []);
+			jt.commander.trigger('list', ['Aproject']);
+			jt.commander.trigger('list', ['nnnnProject']);
+		});
+
+		it('-b, --build', function(done) {
+			jt.commander.trigger('build', ['Cproject', 'nnnnProject']);
+			jt.commander.trigger('build', []);
+			var files = jt.builder.getFilesByProject('Cproject');
+			var has = true;
+			files.forEach(function(file) {
+				if(jt.fs.isVirtual(file)) {
+					if(fs.existsSync(file)) {
+						fs.unlinkSync(file);
+					} else {
+						has = false;
+					}
+				}
+			});
+
+			if(has) {
+				done();
+			} else {
+				done(false);
+			}
+
 		});
 	});
 });

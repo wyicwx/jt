@@ -177,7 +177,5 @@ describe('jt.compressor', function() {
 				});
 			});
 		});
-
-
 	});
 });

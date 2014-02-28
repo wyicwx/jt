@@ -274,6 +274,25 @@ describe('jt.fs', function() {
 				}
 			});
 		});
+
+		it('文件不在映射列表里返回false，并且不会触发callback', function(done) {
+			var triggedCallback = false;
+			var exists = jt.fs.map2local('fs/nullFile.js', function() {
+				triggedCallback = true;
+			});
+
+			if(!exists) {
+				setTimeout(function() {
+					if(triggedCallback) {
+						done(false);
+					} else {
+						done();
+					}
+				}, 2000);
+			} else {
+				done(false);
+			}
+		});
 	});
 
 	describe('private function', function() {
@@ -302,6 +321,6 @@ describe('jt.fs', function() {
 					}
 				});
 			});
-		})
+		});
 	});
 });

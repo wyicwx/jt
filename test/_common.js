@@ -79,17 +79,20 @@ jt.config.project = {
 		files: [
 			"fs/a.js",
 			"fs/b.js",
-			"fs/c.js"
+			"fs/c.js",
+			"fs/null.js"
 		]
 	},
 	'Bproject': {
-		files: []
+		files: [],
+		output: 'fs/output'
 	},
 	'Cproject': {
 		files: [
 			"fs/h.js",
 			"fs/i.js",
-			"fs/k.js"
+			"fs/k.js",
+			"fs/null.js"
 		]
 	}
 };
@@ -97,6 +100,7 @@ jt.config.project = {
 
 jt.config.fs = jt.utils.clone(fsConfig);
 jt.init();
+jt.commander.parse();
 jt.config.fs = jt.utils.clone(fsConfig);
 jt.privateFs = rewire('../lib/fs.js');
 jt.privateServer = rewire('../lib/server.js');
