@@ -46,8 +46,6 @@ describe('jt.compressor', function() {
 				});
 			});
 		});
-
-
 	});
 
 	describe('#css()', function() {
@@ -161,7 +159,6 @@ describe('jt.compressor', function() {
 				});
 			});
 		});
-
 
 		it('扩展compressHtml支持', function(done) {
 			jt.fs.readFile('fs/a.html', function(buffer) {
