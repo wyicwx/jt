@@ -100,7 +100,6 @@ jt.config.project = {
 
 jt.config.fs = jt.utils.clone(fsConfig);
 jt.init();
-jt.commander.parse();
 jt.config.fs = jt.utils.clone(fsConfig);
 jt.privateFs = rewire('../lib/fs.js');
 jt.privateServer = rewire('../lib/server.js');

@@ -143,14 +143,14 @@ describe('jt.builder', function() {
 
 	describe('commander', function() {
 		it('-l, --list', function() {
-			jt.commander.trigger('list', []);
-			jt.commander.trigger('list', ['Aproject']);
-			jt.commander.trigger('list', ['nnnnProject']);
+			jt.commander.run(['--list']);
+			jt.commander.run(['--list', 'Aproject']);
+			jt.commander.run(['--list', 'nnnnProject']);
 		});
 
 		it('-b, --build', function(done) {
-			jt.commander.trigger('build', ['Cproject', 'nnnnProject']);
-			jt.commander.trigger('build', []);
+			jt.commander.run(['--build', 'Cproject', 'nnnnProject']);
+			jt.commander.run(['--build']);
 			var files = jt.builder.getFilesByProject('Cproject');
 			var has = true;
 			files.forEach(function(file) {
