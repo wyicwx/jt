@@ -27,7 +27,7 @@ function checkJtConfig() {
 }
 
 // init
-jt.commander.define({
+jt.commander.command({
 	cmd: 'init', 
 	description: 'init jt config file',
 	notShow: true,
