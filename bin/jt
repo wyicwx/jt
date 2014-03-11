@@ -69,11 +69,9 @@ if(cwd) {
 	jt.config = require(path.join(jt.cwd, '/config.js'));
 	jt.init();
 	// 执行命令
-	jt.commander.parse();
 	jt.commander.run();
 } else {
 	// parse commander
-	jt.commander.parse();
 	if(jt.argv.init) {
 		jt.commander.trigger('init');
 	} else {
