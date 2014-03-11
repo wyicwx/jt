@@ -14,7 +14,9 @@
 		"mutils": "~0.0.5",
 		"uglify-js": "~2.4.0",
 		"yuicompressor": "~2.4.8",
-		"less": "~1.6.3"
+		"less": "~1.6.3",
+		"minimatch": "~0.2.14",
+		"glob": "~3.2.9"
 	},
 	"devDependencies": {
 		"mocha": "*",

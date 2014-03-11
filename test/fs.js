@@ -169,7 +169,7 @@ describe('jt.fs', function() {
 
 	describe('#search()', function() {
 		it('could be search file while exist in real file system', function(done) {
-			jt.fs.search('c.js', function(data) {
+			jt.fs.search('**/c.js', function(data) {
 				if(jt.fs.isVirtual(data[0])) {
 					done();
 				} else {
@@ -179,7 +179,7 @@ describe('jt.fs', function() {
 		});
 
 		it('it search virtual result must be in virtual file system', function(done) {
-			jt.fs.search('b.js', function(data) {
+			jt.fs.search('**/b.js', function(data) {
 				var file = jt.fs.pathConverter('fs/b.js'),
 					hasFile = false;
 
@@ -200,7 +200,7 @@ describe('jt.fs', function() {
 		it('搜索回调只会触发一次', function(done) {
 			var fired = false;
 
-			jt.fs.search('c.js', function(data) {
+			jt.fs.search('**/c.js', function(data) {
 				if(fired) {
 					done(false);
 				} else {
@@ -238,7 +238,7 @@ describe('jt.fs', function() {
 
 	describe('#searchVirtual()', function() {
 		it('could be fuzzy search', function() {
-			var result = jt.fs.searchVirtual('ForSearch.js'),
+			var result = jt.fs.searchVirtual('**/*ForSearch.js'),
 				ret1 = jt.fs.pathConverter('fs/testForSearch.js'),
 				ret2 = jt.fs.pathConverter('fs/reTestForSearch.js'),
 				hasRet1 = false, hasRet2 = false;
