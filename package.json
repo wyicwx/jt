@@ -16,7 +16,8 @@
 		"yuicompressor": "~2.4.8",
 		"less": "~1.6.3",
 		"minimatch": "~0.2.14",
-		"glob": "~3.2.9"
+		"glob": "~3.2.9",
+		"gulp": "~3.5.5"
 	},
 	"devDependencies": {
 		"mocha": "*",
