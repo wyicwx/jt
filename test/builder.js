@@ -51,7 +51,7 @@ describe('jt.builder', function() {
 			}
 		});
 
-		it('it return project files count', function(done) {
+		it('build回调返回对应文件', function(done) {
 			builder.build('Aproject', function(datas) {
 				if(datas.length == builder.getFilesByProject('Aproject').length) {
 					done();

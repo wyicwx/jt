@@ -38,7 +38,6 @@ var fsConfig = fs = {
 			"d.js": "d.js",
 			"e.js": "a.js",
 			"f.js": [{
-				"processor": "string",
 				"value": "string"
 			}],
 			"g.js": [
@@ -46,7 +45,7 @@ var fsConfig = fs = {
 				'f.js'
 			],
 			"h.js": [{
-				"processor": "notDefine"
+				
 			}],
 			"i.js": [{
 				"processor": "string",
@@ -54,16 +53,14 @@ var fsConfig = fs = {
 			}],
 			"j.js": [{
 				"processor": "string",
-				"file": "fs/f.js"
+				"file": "f.js"
 			}],
 			"k.js": [{
 				"processor": "string,test1",
 				"value": "0"
 			}],
 			"l.js": [{
-				"processor": "seajs-define-string",
-				"file": "fs/j.js",
-				"name": "test"
+				"file": "j.js"
 			}],
 			"testForSearch.js": "a.js",
 			"reTestForSearch.js": "a.js",
