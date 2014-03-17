@@ -22,7 +22,8 @@
 	"devDependencies": {
 		"mocha": "*",
 		"blanket": "*",
-		"rewire": "*"
+		"rewire": "*",
+		"jt-seajs": "*"
 	},
 	"scripts": {
 		"test": "make test-all"
