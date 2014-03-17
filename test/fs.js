@@ -18,6 +18,15 @@ describe('jt.fs', function() {
 	});
 
 	describe('#createReadStream()', function() {
+		it('空参数创建的流,一定会触发end事件', function(done) {
+			var stream = jt.fs.createReadStream();
+
+			stream.resume();
+			stream.on('end', function() {
+				done();
+			});
+		});
+
 		it('返回流对象', function() {
 			var stream = jt.fs.createReadStream();
 			var methods = ['read', 'resume', 'pause', 'pipe'];
@@ -30,7 +39,7 @@ describe('jt.fs', function() {
 			assert.ok(true);
 		});
 
-		it('读取空文件', function(done) {
+		it('读取空文件,一定会触发end事件', function(done) {
 			var stream = jt.fs.createReadStream('fs/null.js');
 			stream.on('data', function() {
 				done(false);
@@ -40,7 +49,7 @@ describe('jt.fs', function() {
 			});
 		});
 
-		it('c.js由a.js和b.js合并而成', function(done) {
+		it('读取c.js, c.js由a.js和b.js合并而成，是否合并', function(done) {
 			var stream = jt.fs.createReadStream('fs/c.js');
 			var chunk = [];
 
@@ -61,7 +70,7 @@ describe('jt.fs', function() {
 			});
 		});
 
-		it('读取a.js文件,等价于fs.readFile的结果', function(done) {
+		it('读取a.js文件，等价于fs.readFile的结果', function(done) {
 			var stream = jt.fs.createReadStream('fs/a.js');
 			var chunk = [];
 
@@ -81,6 +90,11 @@ describe('jt.fs', function() {
 			});
 		});
 
+		it('process内不存在file或者value时应该报错', function() {
+			assert.throws(function() {
+				var stream = jt.fs.createReadStream('fs/h.js');
+			});
+		});
 	});
 
 	describe('#readFile()', function() {

@@ -45,7 +45,7 @@ var fsConfig = fs = {
 				'f.js'
 			],
 			"h.js": [{
-				
+				'processor': 'notExist'
 			}],
 			"i.js": [{
 				"processor": "string",
@@ -86,7 +86,7 @@ jt.config.project = {
 	},
 	'Cproject': {
 		files: [
-			"fs/h.js",
+			"fs/j.js",
 			"fs/i.js",
 			"fs/k.js",
 			"fs/null.js"
