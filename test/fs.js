@@ -299,6 +299,88 @@ describe('jt.fs', function() {
 		});
 	});
 
+	describe('#pathResolve()', function() {
+		it('正常解析 ~/解析为 base路径', function() {
+			var resolve = jt.fs.pathResolve('~/');
+
+			if(resolve == jt.config.base) {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
+		});
+
+		it('正常解析 ~/**/**.js', function() {
+			var resolve = jt.fs.pathResolve('~/**/**.js');
+
+			if(resolve == path.join(jt.config.base, '**/**.js')) {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
+		});
+
+		it('正常解析 ~/../', function() {
+			var resolve = jt.fs.pathResolve('~/../');
+
+			if(resolve == path.resolve(jt.config.base, '../')) {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
+		});
+
+		it('正常解析 ~/./', function() {
+			var resolve = jt.fs.pathResolve('~/./');
+
+			if(resolve == jt.config.base) {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
+		});
+
+		var relative = path.join(jt.config.base, 'fs');
+		it('正常解析 ./', function() {
+			var resolve = jt.fs.pathResolve('./', relative);
+
+			if(resolve == relative) {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
+		});
+
+		it('正常解析 ../', function() {
+			var resolve = jt.fs.pathResolve('../', relative);
+
+			if(resolve == jt.config.base) {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
+		});
+
+		it('正常解析 /', function() {
+			var resolve = jt.fs.pathResolve('/');
+
+			if(resolve == '/') {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
+		});
+	});
+
+	describe('#existsSync()', function() {
+		it('正常判断虚拟文件', function() {
+			// if(jt.fs.existsSync(''))
+		});
+
+		it('正常判断真实文件', function() {
+
+		});
+	});
 	// describe('private function', function() {
 	// 	it('#_map2combo(), prevent duplicate references to cause a stack overflow', function() {
 	// 		jt.privateFs.__get__('_map2combo')('fs/d.js');
