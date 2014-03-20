@@ -2,10 +2,13 @@ var assert = require('assert'),
 	fs = require('fs'),
 	path = require('path');
 
+var through = require('through2');
+var aggre = require('akoStream').aggre;
+
 require('./_common.js');
 
 describe('jt.fs', function() {
-	describe('#pretreatment', function() {
+	describe('#预处理', function() {
 		it('jt.config.fs.list需要格式化成完整路径', function() {
 			['c.js', 'd.js', 'e.js', 'f.js', 'g.js', 'h.js', 'i.js'].forEach(function(name) {
 				if(path.join(jt.config.base, "fs/"+name) in jt.config.fs.list) {
@@ -97,6 +100,26 @@ describe('jt.fs', function() {
 		});
 	});
 
+	describe('#createReadCombineStream()', function() {
+		it('混合类型支持', function(done) {
+			var stream = jt.fs.createReadCombineStream([
+				'fs/i.js',
+				{
+					processor: 'string',
+					value: 'test'
+				}
+			]);
+
+			aggre(stream).on('data', function(buffer) {
+				if(buffer.toString() == 'stringtest') {
+					done()
+				} else {
+					done(false);
+				}
+			});
+		});
+	});
+
 	describe('#readFile()', function() {
 		it('结果等价于createReadStream', function(done) {
 			var stream = jt.fs.createReadStream('fs/c.js');
@@ -128,30 +151,18 @@ describe('jt.fs', function() {
 			});
 		});
 
-		// it('对processor支持多个参数多processor，并将结果串行传递', function(done) {
-		// 	jt.fs.processorDefine('test1', function(data, opt, done) {
-		// 		var data = data.toString();
+		it('读取流文件', function(done) {
+			var stream = jt.fs.createReadStream('fs/c.js');
+			var chunk = [];
 
-		// 		data += '1';
-		// 		done(data);
-		// 	});
-
-		// 	jt.fs.readFile('fs/k.js', function(buffer) {
-		// 		if(buffer.toString() == '01') {
-		// 			done();
-		// 		} else {
-		// 			done(false);
-		// 		}
-		// 	});
-		// });
-
-		it('处理器的file参数多重引用的支持', function(done) {
-			jt.fs.readFile('fs/l.js', function(buffer) {
-				if(buffer.toString() == 'string') {
-					done();
-				} else {
-					done(false);
-				}
+			jt.fs.readFile(stream, function(buffer) {
+				jt.fs.readFile('fs/c.js', function(buffer1) {
+					if(buffer.toString() == buffer1.toString()) {
+						done()
+					} else {
+						done(false);
+					}
+				});
 			});
 		});
 	});
@@ -402,5 +413,93 @@ describe('jt.fs', function() {
 				jt.fs.createReadStream('processor/notProcessor.js');
 			});
 		});
+
+		it('参数正确传递', function(done) {
+			jt.fs.assign('___TEST_PROCESSOR_DEFINE', function(opt, info) {
+				if(opt.name == 'name' && opt.file == "~/fs/c.js" && opt.dir == jt.config.base) {
+					if(info.dir == jt.config.base) {
+						done();
+					}
+				} else {
+					done(false);
+				}
+				return through();
+			});
+			jt.fs.createReadCombineStream([{
+				processor: "___TEST_PROCESSOR_DEFINE",
+				file: "~/fs/c.js",
+				___TEST_PROCESSOR_DEFINE: {
+					name: 'name',
+					file: "~/fs/c.js",
+					dir: jt.config.base
+				}
+			}]);
+		});
+
+		it('第二个参数只有一个属性', function(done) {
+			jt.fs.assign('___TEST_PROCESSOR_DEFINE1', function(opt, info) {
+				var hasOnly = true;
+
+				for(var i in info) {
+					if(i != 'dir') {
+						hasOnly = false;
+					}
+				}
+				if(hasOnly) {
+					done();
+				} else {
+					done(false);
+				}
+				return through();
+			});
+			jt.fs.createReadCombineStream([{
+				processor: "___TEST_PROCESSOR_DEFINE1",
+				file: "~/fs/c.js",
+				___TEST_PROCESSOR_DEFINE1: {
+					name: 'name',
+					file: "~/fs/c.js",
+					dir: jt.config.base
+				}
+			}]);
+		});
+
+		it('value值正确传递', function(done) {
+			var obj = jt.fs.createReadCombineStream([{
+				value: 'test',
+				processor: 'string'
+			}]);
+
+			aggre(obj).on('data', function(buffer) {
+				if(buffer.toString() == 'test') {
+					done();
+				} else {
+					done(false);
+				}
+			});
+		});
+
+		it('处理器的file参数多重引用的支持', function(done) {
+			jt.fs.readFile('fs/l.js', function(buffer) {
+				if(buffer.toString() == 'string') {
+					done();
+				} else {
+					done(false);
+				}
+			});
+		});
+
+		// it('参数file支持模糊搜索', function(done) {
+		// 	jt.fs.readComboFile({
+		// 		file: '~/build/*'
+		// 	}, function(buffer) {
+		// 		if(buffer.toString() == '123') {
+		// 			done();
+		// 		} else {
+		// 			done(false);
+		// 		}
+		// 	});
+		// });
 	});
+
+
 });

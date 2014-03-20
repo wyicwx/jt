@@ -71,6 +71,11 @@ var fsConfig = fs = {
 				"processor": "123123",
 				"value": "test"
 			}]
+		},
+		"build": {
+			"one.js": [{value: "1"}],
+			"two.js": [{value: "2"}],
+			"three": [{value: "3"}]
 		}
 	},
 	ignorePath: [
@@ -96,6 +101,11 @@ jt.config.project = {
 			"fs/i.js",
 			"fs/k.js",
 			"fs/null.js"
+		]
+	},
+	'globProject': {
+		files: [
+			"build/*"
 		]
 	}
 };

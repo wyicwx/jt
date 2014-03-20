@@ -141,6 +141,16 @@ describe('jt.builder', function() {
 		});
 	});
 
+	describe('支持glob语法', function() {
+		it('globProject有3个文件', function() {
+			var files = jt.builder.getFilesByProject('globProject');
+			if(files.length == 3) {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
+		});
+	});
 	describe('commander', function() {
 		it('-l, --list', function() {
 			jt.commander.run(['--list']);
@@ -151,24 +161,28 @@ describe('jt.builder', function() {
 		it('-b, --build', function(done) {
 			jt.commander.run(['--build', 'Cproject', 'nnnnProject']);
 			jt.commander.run(['--build']);
-			var files = jt.builder.getFilesByProject('Cproject');
-			var has = true;
-			files.forEach(function(file) {
-				if(jt.fs.isVirtual(file)) {
-					if(fs.existsSync(file)) {
-						fs.unlinkSync(file);
-					} else {
-						has = false;
+			setTimeout(function() {
+				var files = jt.builder.getFilesByProject('Cproject');
+				var has = true;
+				files.forEach(function(file) {
+					if(jt.fs.isVirtual(file)) {
+						if(fs.existsSync(file)) {
+							fs.unlinkSync(file);
+						} else {
+							has = false;
+						}
 					}
-				}
-			});
+				});
 
-			if(has) {
-				done();
-			} else {
-				done(false);
-			}
+				if(has) {
+					done();
+				} else {
+					done(false);
+				}
+			}, 1000);
 
 		});
 	});
+
+
 });
