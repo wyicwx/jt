@@ -68,7 +68,7 @@ var fsConfig = fs = {
 				"processor": "string"
 			}],
 			"notProcessor.js": [{
-				"processor": "string",
+				"processor": "123123",
 				"value": "test"
 			}]
 		}
@@ -106,3 +106,9 @@ jt.init();
 jt.config.fs = jt.utils.clone(fsConfig);
 jt.privateFs = rewire('../lib/fs.js');
 jt.privateServer = rewire('../lib/server.js');
+
+var through = require('through2');
+
+jt.fs.assign('string', function(opt) {
+	return through();
+});
