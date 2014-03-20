@@ -48,15 +48,12 @@ var fsConfig = fs = {
 				'processor': 'notExist'
 			}],
 			"i.js": [{
-				"processor": "string",
 				"value": "string"
 			}],
 			"j.js": [{
-				"processor": "string",
 				"file": "f.js"
 			}],
 			"k.js": [{
-				"processor": "string,test1",
 				"value": "0"
 			}],
 			"l.js": [{
@@ -65,6 +62,15 @@ var fsConfig = fs = {
 			"testForSearch.js": "a.js",
 			"reTestForSearch.js": "a.js",
 			"toRemove.js": "a.js"
+		},
+		"processor/": {
+			"notFileValue.js": [{
+				"processor": "string"
+			}],
+			"notProcessor.js": [{
+				"processor": "string",
+				"value": "test"
+			}]
 		}
 	},
 	ignorePath: [
