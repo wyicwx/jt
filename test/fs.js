@@ -112,7 +112,7 @@ describe('jt.fs', function() {
 
 			aggre(stream).on('data', function(buffer) {
 				if(buffer.toString() == 'stringtest') {
-					done()
+					done();
 				} else {
 					done(false);
 				}
@@ -252,7 +252,7 @@ describe('jt.fs', function() {
 	});
 
 	describe('#searchVirtual()', function() {
-		it('could be fuzzy search', function() {
+		it('支持模糊搜索', function() {
 			var result = jt.fs.searchVirtual('**/*ForSearch.js'),
 				ret1 = jt.fs.pathConverter('fs/testForSearch.js'),
 				ret2 = jt.fs.pathConverter('fs/reTestForSearch.js'),
@@ -268,6 +268,16 @@ describe('jt.fs', function() {
 			});
 
 			if(hasRet1 && hasRet2) {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
+		});
+
+		it('真实文件不在虚拟文件无法搜索到', function() {
+			var result = jt.fs.searchVirtual('fs/a.js');
+
+			if(!result[0]) {
 				assert.ok(true);
 			} else {
 				assert.ok(false);
@@ -399,6 +409,14 @@ describe('jt.fs', function() {
 				assert.ok(false);
 			}
 		});
+
+		it('正常判断不存在文件', function() {
+			if(!jt.fs.existsSync('notExist/notExist.js')) {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
+		});
 	});
 
 	describe('#processor', function() {
@@ -488,18 +506,32 @@ describe('jt.fs', function() {
 			});
 		});
 
-		// it('参数file支持模糊搜索', function(done) {
-		// 	jt.fs.readComboFile({
-		// 		file: '~/build/*'
-		// 	}, function(buffer) {
-		// 		if(buffer.toString() == '123') {
-		// 			done();
-		// 		} else {
-		// 			done(false);
-		// 		}
-		// 	});
-		// });
-	});
+		it('参数file支持模糊搜索', function(done) {
+			jt.fs.readComboFile({
+				file: '~/build/*'
+			}, function(buffer) {
+				if(buffer.toString() == '123') {
+					done();
+				} else {
+					done(false);
+				}
+			});
+		});
 
+		it('解析数组file', function(done) {
+			jt.fs.readComboFile({
+				file: [
+					'~/build/*',
+					'fs/f.js'
+				]}, function(buffer) {
+					if(buffer.toString() == '123string') {
+						done();
+					} else {
+						done(false);
+					}
+				});
+		});
+	});
+	
 
 });
