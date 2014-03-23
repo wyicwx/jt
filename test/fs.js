@@ -167,6 +167,62 @@ describe('jt.fs', function() {
 		});
 	});
 
+	describe('#writeFile()', function() {
+		it('自动创建文件夹', function(done) {
+			jt.fs.writeFile('fs/mkdir/write/file.js', 'test', function() {
+				var p = jt.fs.pathResolve('fs/mkdir/write');
+
+				var stats = fs.statSync(p);
+				fs.unlinkSync(jt.fs.pathResolve('fs/mkdir/write/file.js'));
+				fs.rmdirSync(jt.fs.pathResolve('fs/mkdir/write'));
+				fs.rmdirSync(jt.fs.pathResolve('fs/mkdir'));
+				if(stats.isDirectory()) {
+					done();
+				} else {
+					done(false);
+				}
+			});
+		});
+
+		it('正确写入文件', function(done) {
+			jt.fs.writeFile('fs/mkdir1/write1/file1.js', 'test', function() {
+				var content = fs.readFileSync(jt.fs.pathResolve('fs/mkdir1/write1/file1.js'));
+
+				fs.unlinkSync(jt.fs.pathResolve('fs/mkdir1/write1/file1.js'));
+				fs.rmdirSync(jt.fs.pathResolve('fs/mkdir1/write1'));
+				fs.rmdirSync(jt.fs.pathResolve('fs/mkdir1'));
+				if(content.toString() == 'test') {
+					done();
+				} else {
+					done(false);
+				}
+			});
+		});
+	});
+
+	describe('#createWriteStream()', function() {
+		it('返回可写流对象', function() {
+			var stream = jt.fs.createWriteStream('fs/mkdir2/write2/file2.js');
+			var avail = true;
+
+			['write', 'end', 'writable'].forEach(function(value) {
+				if(!stream.hasOwnProperty(value) && !stream[value]) {
+					avail = false;
+				}
+			});
+			stream.end();
+
+			fs.unlinkSync(jt.fs.pathResolve('fs/mkdir2/write2/file2.js'));
+			fs.rmdirSync(jt.fs.pathResolve('fs/mkdir2/write2'));
+			fs.rmdirSync(jt.fs.pathResolve('fs/mkdir2'));
+			if(avail) {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
+		});
+	});
+
 	describe('#isVirtual()', function() {
 		it('combo file is virtual file', function() {
 			var ensure = jt.fs.isVirtual('fs/c.js');
@@ -249,6 +305,16 @@ describe('jt.fs', function() {
 				}
 			});
 		});
+
+		it('正确忽略配置忽略文件夹', function(done) {
+			jt.fs.search('fs/ignore/*', function(data) {
+				if(data.length) {
+					done(false);
+				} else {
+					done();
+				}
+			});
+		});
 	});
 
 	describe('#searchVirtual()', function() {
@@ -282,6 +348,17 @@ describe('jt.fs', function() {
 			} else {
 				assert.ok(false);
 			}
+		});
+
+		it('正确忽略配置忽略文件夹', function(done) {
+			jt.fs.search('fs/ignore/ignoreFile.js', function(data) {
+
+				if(data.length) {
+					done(false);
+				} else {
+					done();
+				}
+			});
 		});
 	});
 

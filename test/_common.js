@@ -79,7 +79,7 @@ var fsConfig = fs = {
 		}
 	},
 	ignorePath: [
-		"fs/ignore"
+		"fs/ignore/*"
 	]
 };
 jt.config.project = {
