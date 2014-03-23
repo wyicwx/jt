@@ -201,7 +201,7 @@ describe('jt.fs', function() {
 	});
 
 	describe('#createWriteStream()', function() {
-		it('返回可写流对象', function() {
+		it('返回可写流对象', function(done) {
 			var stream = jt.fs.createWriteStream('fs/mkdir2/write2/file2.js');
 			var avail = true;
 
@@ -210,16 +210,18 @@ describe('jt.fs', function() {
 					avail = false;
 				}
 			});
-			stream.end();
+			stream.write('test', function() {
+				stream.end();
 
-			fs.unlinkSync(jt.fs.pathResolve('fs/mkdir2/write2/file2.js'));
-			fs.rmdirSync(jt.fs.pathResolve('fs/mkdir2/write2'));
-			fs.rmdirSync(jt.fs.pathResolve('fs/mkdir2'));
-			if(avail) {
-				assert.ok(true);
-			} else {
-				assert.ok(false);
-			}
+				fs.unlinkSync(jt.fs.pathResolve('fs/mkdir2/write2/file2.js'));
+				fs.rmdirSync(jt.fs.pathResolve('fs/mkdir2/write2'));
+				fs.rmdirSync(jt.fs.pathResolve('fs/mkdir2'));
+				if(avail) {
+					done();
+				} else {
+					done(false);
+				}
+			});
 		});
 	});
 
@@ -608,7 +610,16 @@ describe('jt.fs', function() {
 					}
 				});
 		});
-	});
-	
 
+		it('加载cwd processor模块', function(done) {
+			jt.fs.readFile('fs/through.js', function(buffer) {
+				if(buffer.toString() == 'test') {
+					done();
+				} else {
+					done(false);
+				}
+			});
+
+		});
+	});
 });

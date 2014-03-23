@@ -4,6 +4,7 @@ var assert = require('assert'),
 	rewire = require('rewire');
 
 var jt = require('../lib/kernel.js');
+jt.cwd = __dirname;
 jt.config = require('../configs/config.js');
 jt.config.base = path.resolve(__dirname);
 var fsConfig = fs = {
@@ -61,7 +62,11 @@ var fsConfig = fs = {
 			}],
 			"testForSearch.js": "a.js",
 			"reTestForSearch.js": "a.js",
-			"toRemove.js": "a.js"
+			"toRemove.js": "a.js",
+			"through.js": [{
+				"processor": ['through'],
+				"value": "test"
+			}]
 		},
 		"processor/": {
 			"notFileValue.js": [{

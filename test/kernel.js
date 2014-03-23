@@ -1,12 +1,11 @@
+var assert = require('assert');
 
+require('./_common.js');
 
-// describe('kernel', function() {
-// 	it('not throw error', function() {
-// 		try {
-// 			require('../lib/kernel.js');
-// 		} catch(e) {
-// 			assert.ok(false);
-// 		}
-// 		assert.ok(true);		
-// 	});	
-// });
+describe('kernel', function() {
+	it('重复初始化报错显示', function() {
+		assert.throws(function() {
+			jt.init();
+		});
+	});	
+});
