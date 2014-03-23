@@ -181,6 +181,30 @@ describe('jt.builder', function() {
 				}
 			}, 1000);
 		});
+
+		it('build -f file', function(done) {
+			jt.commander.run(['build', 'Cproject', 'nnnnProject']);
+			jt.commander.run(['build']);
+			setTimeout(function() {
+				var files = jt.builder.getFilesByProject('Cproject');
+				var has = true;
+				files.forEach(function(file) {
+					if(jt.fs.isVirtual(file)) {
+						if(fs.existsSync(file)) {
+							fs.unlinkSync(file);
+						} else {
+							has = false;
+						}
+					}
+				});
+
+				if(has) {
+					done();
+				} else {
+					done(false);
+				}
+			}, 1000);
+		});
 	});
 
 

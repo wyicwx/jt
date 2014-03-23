@@ -5,10 +5,7 @@ var config = {
 		ignorePath: []
 	},
 	project: require('./project.js'),
-	server: require('./server.js'),
-	compressor: {
-		gzip: true
-	}
+	server: require('./server.js')
 };
 
 module.exports = config;
