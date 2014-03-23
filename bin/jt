@@ -26,42 +26,6 @@ function checkJtConfig() {
 	return false;
 }
 
-// init
-jt.commander.command({
-	cmd: 'init', 
-	description: 'init jt config file',
-	notShow: true,
-	handler: function(opt, argv) {
-		var fs = require('fs'),
-			path = require('path');
-
-		jt.utils.mkdir('.jt', './');
-
-		function cpFile() {
-			['config.js', 'fs.js', 'project.js', 'server.js'].forEach(function(file) {
-				var defaultConfig = fs.createReadStream(path.join(jt.root, 'configs/'+file));
-				var targetConfig = fs.createWriteStream(path.join('./.jt/', file));
-				defaultConfig.pipe(targetConfig, {
-					flags: 'w',
-					encoding: 'utf-8',
-					mode: '755'
-				});
-			});
-		}
-		if(!fs.existsSync('./.jt/config.js')) {
-			cpFile();
-			console.log('  Initialized jt config in '+path.resolve('./.jt'));
-		} else {
-			jt.utils.read('  config was existed.\n  Are you want override config.js by default? yes(Y) or no(N)', function(reply) {
-				if(reply.toLowerCase() == 'y') {
-					cpFile();
-					console.log('  override.');
-				}
-			});
-		}
-	}
-});
-
 // use jt init command 
 var cwd = checkJtConfig();
 if(cwd) {
@@ -71,9 +35,37 @@ if(cwd) {
 	// 执行命令
 	jt.commander.run();
 } else {
+	// init
+	jt.commander.command({
+		cmd: 'init', 
+		description: 'init jt config file',
+		notShow: true,
+		handler: function(opt, argv) {
+			var fs = require('fs'),
+				path = require('path');
+
+			jt.utils.mkdir('.jt', './');
+
+			function cpFile() {
+				['config.js', 'fs.js', 'project.js', 'server.js'].forEach(function(file) {
+					var defaultConfig = fs.createReadStream(path.join(jt.root, 'configs/'+file));
+					var targetConfig = fs.createWriteStream(path.join('./.jt/', file));
+					defaultConfig.pipe(targetConfig, {
+						flags: 'w',
+						encoding: 'utf-8',
+						mode: '755'
+					});
+				});
+			}
+
+			cpFile();
+			console.log('  Initialized jt config in '+path.resolve('./.jt'));
+		}
+	});
+
 	// parse commander
-	if(jt.argv.init) {
-		jt.commander.trigger('init');
+	if(process.argv[2] == 'init') {
+		jt.commander.run(['init']);
 	} else {
 		console.log('  Fatal error: Unable to find jt\'s config file.');
 		console.log('');

@@ -152,15 +152,15 @@ describe('jt.builder', function() {
 		});
 	});
 	describe('commander', function() {
-		it('-l, --list', function() {
-			jt.commander.run(['--list']);
-			jt.commander.run(['--list', 'Aproject']);
-			jt.commander.run(['--list', 'nnnnProject']);
+		it('-l', function() {
+			jt.commander.run(['-l']);
+			jt.commander.run(['-l', 'Aproject']);
+			jt.commander.run(['-l', 'nnnnProject']);
 		});
 
-		it('-b, --build', function(done) {
-			jt.commander.run(['--build', 'Cproject', 'nnnnProject']);
-			jt.commander.run(['--build']);
+		it('build', function(done) {
+			jt.commander.run(['build', 'Cproject', 'nnnnProject']);
+			jt.commander.run(['build']);
 			setTimeout(function() {
 				var files = jt.builder.getFilesByProject('Cproject');
 				var has = true;
@@ -180,7 +180,6 @@ describe('jt.builder', function() {
 					done(false);
 				}
 			}, 1000);
-
 		});
 	});
 
