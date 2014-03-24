@@ -60,6 +60,18 @@ var fsConfig = fs = {
 			"l.js": [{
 				"file": "j.js"
 			}],
+			"m.js": [{
+				"file": "j.js"
+			}],
+			"buildF1.js": [{
+				"file": "j.js"
+			}],
+			"buildF2.js": [{
+				"file": "j.js"
+			}],
+			"buildF3.js": [{
+				"file": "j.js"
+			}],
 			"testForSearch.js": "a.js",
 			"reTestForSearch.js": "a.js",
 			"toRemove.js": "a.js",
@@ -116,6 +128,12 @@ jt.config.project = {
 		files: [
 			"build/*"
 		]
+	},
+	'stringProject': {
+		files: 'fs/j.js'
+	},
+	'localFileProject': {
+		files: ['fs/a.js']
 	}
 };
 

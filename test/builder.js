@@ -6,13 +6,24 @@ require('./_common.js');
 var builder = jt.builder;
 
 describe('jt.builder', function() {
-	it('#getFilesByProject()', function() {
-		var files = builder.getFilesByProject('Aproject');
-		if(jt.config.project.Aproject.files.length == files.length) {
-			assert.ok(true);
-		} else {
-			assert.ok(false);
-		}
+	describe('#getFilesByProject()', function() {
+		it('正确获取project文件', function() {
+			var files = builder.getFilesByProject('Aproject');
+			if(jt.config.project.Aproject.files.length == files.length) {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
+		});
+
+		it('空项目返回null', function() {
+			var files = builder.getFilesByProject('emptyProject');
+			if(files == null) {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
+		});
 	});
 
 	it('#getAllProject()', function() {
@@ -152,15 +163,14 @@ describe('jt.builder', function() {
 		});
 	});
 	describe('commander', function() {
-		it('-l', function() {
-			jt.commander.run(['-l']);
-			jt.commander.run(['-l', 'Aproject']);
-			jt.commander.run(['-l', 'nnnnProject']);
+		it('build -l', function() {
+			jt.commander.run(['build', '-l']);
+			jt.commander.run(['build', '-l', 'Aproject']);
+			jt.commander.run(['build', '-l', 'nnnnProject']);
 		});
 
 		it('build', function(done) {
 			jt.commander.run(['build', 'Cproject', 'nnnnProject']);
-			jt.commander.run(['build']);
 			setTimeout(function() {
 				var files = jt.builder.getFilesByProject('Cproject');
 				var has = true;
@@ -182,19 +192,42 @@ describe('jt.builder', function() {
 			}, 1000);
 		});
 
-		it('build -f file', function(done) {
-			jt.commander.run(['build', 'Cproject', 'nnnnProject']);
+		it('build没有报错', function() {
 			jt.commander.run(['build']);
+		});
+
+		it('build -f fs/m.js', function(done) {
+			jt.commander.run(['build', '-f', 'fs/m.js']);
 			setTimeout(function() {
-				var files = jt.builder.getFilesByProject('Cproject');
+				var file = jt.fs.pathResolve('fs/m.js');
+				if(fs.existsSync(file)) {
+					fs.unlinkSync(file);
+					done();
+				} else {
+					done(false);
+				}
+			}, 1000);
+		});
+
+		it('build -f显示help没有报错', function() {
+			jt.commander.run(['build', '-f']);
+		})
+
+		it('build -f 多文件', function(done) {
+			jt.commander.run(['build', '-f', 'fs/buildF1.js', 'fs/buildF2.js', 'fs/buildF3.js', 'fs/buildF4.js']);
+			setTimeout(function() {
+				process.stdin.emit('data', 'all\r\n');
+			}, 10);
+			setTimeout(function() {
+				var file1 = jt.fs.pathResolve('fs/buildF1.js');
+				var file2 = jt.fs.pathResolve('fs/buildF2.js');
+				var file3 = jt.fs.pathResolve('fs/buildF3.js');
 				var has = true;
-				files.forEach(function(file) {
-					if(jt.fs.isVirtual(file)) {
-						if(fs.existsSync(file)) {
-							fs.unlinkSync(file);
-						} else {
-							has = false;
-						}
+				[file1, file2, file3].forEach(function(file) {
+					if(fs.existsSync(file)) {
+						fs.unlinkSync(file);
+					} else {
+						has = false;
 					}
 				});
 
@@ -204,6 +237,20 @@ describe('jt.builder', function() {
 					done(false);
 				}
 			}, 1000);
+		});
+
+		it('build -f 不存在文件没报错', function() {
+			jt.commander.run(['build', '-f', 'nullFile.js']);
+		});
+
+		it('build -f 无选择，有提示，无报错', function() {
+			jt.commander.run(['build', '-f', 'fs/buildF1.js', 'fs/buildF2.js', 'fs/buildF3.js', 'fs/buildF4.js']);
+			setTimeout(function() {
+				process.stdin.emit('data', 'ddd\r\n');
+			}, 10);
+		})
+		it('build localProject', function() {
+			jt.commander.run(['build', 'localFileProject']);
 		});
 	});
 
