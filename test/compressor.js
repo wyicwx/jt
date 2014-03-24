@@ -9,7 +9,9 @@ describe('jt.compressor', function() {
 
 	describe('Minifyjs', function() {
 		it('正常', function() {
-			jt.fs.createReadStream('processor/Minifyjs.js');
+			jt.fs.readFile('processor/Minifyjs.js', function(data) {
+				console.log(data.toString());
+			});
 		});
 	});
 	// describe('#js()', function() {
