@@ -75,6 +75,10 @@ var fsConfig = fs = {
 			"notProcessor.js": [{
 				"processor": "123123",
 				"value": "test"
+			}],
+			"Minifyjs.js": [{
+				"processor": "Minifyjs",
+				"value": "test"
 			}]
 		},
 		"build": {

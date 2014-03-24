@@ -6,6 +6,12 @@ require('./_common.js');
 var compressor = jt.compressor;
 
 describe('jt.compressor', function() {
+
+	describe('Minifyjs', function() {
+		it('正常', function() {
+			jt.fs.createReadStream('processor/Minifyjs.js');
+		});
+	});
 	// describe('#js()', function() {
 	// 	it('压缩后尺寸变小且压缩后不为空', function(done) {
 	// 		jt.fs.readFile('fs/c.js', function(buffer) {
