@@ -602,13 +602,36 @@ describe('jt.fs', function() {
 				file: [
 					'~/build/*',
 					'fs/f.js'
-				]}, function(buffer) {
-					if(buffer.toString() == '123string') {
+				]},
+			function(buffer) {
+				if(buffer.toString() == '123string') {
+					done();
+				} else {
+					done(false);
+				}
+			});
+		});
+
+		it('多个参数file格式化为单参数', function(done) {
+			var doned = false;
+			jt.fs.assign('optionTest', function(options, info) {
+				if(!doned) {
+					doned = true;
+					if(!Array.isArray(options.file)) {
 						done();
 					} else {
 						done(false);
 					}
-				});
+				}
+				return through();
+			});
+			jt.fs.readComboFile({
+				processor: 'optionTest',
+				file: '~/build/*',
+				optionTest: function() {
+					return {file: this.file}
+				}
+			});
 		});
 
 		it('加载cwd processor模块', function(done) {
