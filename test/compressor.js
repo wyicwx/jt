@@ -53,9 +53,7 @@ describe('jt.compressor', function() {
 
 	it('compress -f 多文件', function(done) {
 		jt.commander.run(['compress', '-f', 'fs/buildF1.js', 'fs/buildF2.js', 'fs/buildF3.js']);
-		setTimeout(function() {
-			process.stdin.emit('data', 'all\r\n');
-		}, 10);
+		process.stdin.emit('data', 'all\r\n');
 		setTimeout(function() {
 			var file1 = jt.fs.pathResolve('fs/buildF1.min.js');
 			var file2 = jt.fs.pathResolve('fs/buildF2.min.js');

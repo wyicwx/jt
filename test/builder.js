@@ -245,9 +245,7 @@ describe('jt.builder', function() {
 
 		it('build -f 无选择，有提示，无报错', function() {
 			jt.commander.run(['build', '-f', 'fs/buildF1.js', 'fs/buildF2.js', 'fs/buildF3.js', 'fs/buildF4.js']);
-			setTimeout(function() {
-				process.stdin.emit('data', 'ddd\r\n');
-			}, 10);
+			process.stdin.emit('data', 'ddd\r\n');
 		})
 		it('build localProject', function() {
 			jt.commander.run(['build', 'localFileProject']);
