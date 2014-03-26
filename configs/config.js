@@ -9,7 +9,8 @@ var config = {
 	compressor: {
 		'jsmin': 'jt-jsmin',
 		'uglify': 'jt-uglify'
-	}
+	},
+	plugins: []
 };
 
 module.exports = config;
