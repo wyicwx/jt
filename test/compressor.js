@@ -82,4 +82,21 @@ describe('jt.compressor', function() {
 	it('compress 正常显示help,没有报错', function() {
 		jt.commander.run(['compress']);
 	});
+
+	it('compress 取消压缩', function() {
+		jt.commander.run(['compress', '-f', 'fs/buildF1.js', 'fs/buildF2.js', 'fs/buildF3.js']);
+		process.stdin.emit('data', '\r\n');
+		var file1 = jt.fs.pathResolve('fs/buildF1.min.js');
+		var file2 = jt.fs.pathResolve('fs/buildF2.min.js');
+		var file3 = jt.fs.pathResolve('fs/buildF3.min.js');
+		var has = true;
+		[file1, file2, file3].forEach(function(file) {
+			if(fs.existsSync(file)) {
+				fs.unlinkSync(file);
+				assert.ok(false);
+			} else {
+				assert.ok(true);
+			}
+		});
+	});
 });
