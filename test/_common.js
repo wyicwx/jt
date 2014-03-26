@@ -4,6 +4,7 @@ var assert = require('assert'),
 	rewire = require('rewire');
 
 var jt = require('../lib/kernel.js');
+jt.cwd = __dirname;
 jt.config = require('../configs/config.js');
 jt.config.base = path.resolve(__dirname);
 var fsConfig = fs = {
@@ -38,7 +39,6 @@ var fsConfig = fs = {
 			"d.js": "d.js",
 			"e.js": "a.js",
 			"f.js": [{
-				"processor": "string",
 				"value": "string"
 			}],
 			"g.js": [
@@ -46,32 +46,61 @@ var fsConfig = fs = {
 				'f.js'
 			],
 			"h.js": [{
-				"processor": "notDefine"
+				'processor': 'notExist'
 			}],
 			"i.js": [{
-				"processor": "string",
 				"value": "string"
 			}],
 			"j.js": [{
-				"processor": "string",
-				"file": "fs/f.js"
+				"file": "f.js"
 			}],
 			"k.js": [{
-				"processor": "string,test1",
 				"value": "0"
 			}],
 			"l.js": [{
-				"processor": "seajs-define-string",
-				"file": "fs/j.js",
-				"name": "test"
+				"file": "j.js"
+			}],
+			"m.js": [{
+				"file": "j.js"
+			}],
+			"buildF1.js": [{
+				"file": "j.js"
+			}],
+			"buildF2.js": [{
+				"file": "j.js"
+			}],
+			"buildF3.js": [{
+				"file": "j.js"
 			}],
 			"testForSearch.js": "a.js",
 			"reTestForSearch.js": "a.js",
-			"toRemove.js": "a.js"
+			"toRemove.js": "a.js",
+			"through.js": [{
+				"processor": ['through'],
+				"value": "test"
+			}]
+		},
+		"processor/": {
+			"notFileValue.js": [{
+				"processor": "string"
+			}],
+			"notProcessor.js": [{
+				"processor": "123123",
+				"value": "test"
+			}],
+			"Minifyjs.js": [{
+				"processor": "Minifyjs",
+				"value": "test"
+			}]
+		},
+		"build": {
+			"one.js": [{value: "1"}],
+			"two.js": [{value: "2"}],
+			"three": [{value: "3"}]
 		}
 	},
 	ignorePath: [
-		"fs/ignore"
+		"fs/ignore/*"
 	]
 };
 jt.config.project = {
@@ -89,18 +118,34 @@ jt.config.project = {
 	},
 	'Cproject': {
 		files: [
-			"fs/h.js",
+			"fs/j.js",
 			"fs/i.js",
 			"fs/k.js",
 			"fs/null.js"
 		]
+	},
+	'globProject': {
+		files: [
+			"build/*"
+		]
+	},
+	'stringProject': {
+		files: 'fs/j.js'
+	},
+	'localFileProject': {
+		files: ['fs/a.js']
 	}
 };
 
 
 jt.config.fs = jt.utils.clone(fsConfig);
 jt.init();
-jt.commander.parse();
 jt.config.fs = jt.utils.clone(fsConfig);
 jt.privateFs = rewire('../lib/fs.js');
 jt.privateServer = rewire('../lib/server.js');
+
+var through = require('through2');
+
+jt.fs.assign('string', function(opt) {
+	return through();
+});

@@ -2,10 +2,13 @@ var assert = require('assert'),
 	fs = require('fs'),
 	path = require('path');
 
+var through = require('through2');
+var aggre = require('akoStream').aggre;
+
 require('./_common.js');
 
 describe('jt.fs', function() {
-	describe('#pretreatment', function() {
+	describe('#预处理', function() {
 		it('jt.config.fs.list需要格式化成完整路径', function() {
 			['c.js', 'd.js', 'e.js', 'f.js', 'g.js', 'h.js', 'i.js'].forEach(function(name) {
 				if(path.join(jt.config.base, "fs/"+name) in jt.config.fs.list) {
@@ -15,30 +18,19 @@ describe('jt.fs', function() {
 				}
 			});
 		});
-
-		it('run processor', function(done) {
-			jt.fs.readFile('fs/f.js', function(data) {
-				if(data.toString() == 'string') {
-					done();
-				} else {
-					done(false);
-				}
-			});
-		});
-
-		it('run not define processor', function(done) {
-			jt.fs.readFile('fs/h.js', function(data) {
-				if(data.toString() == '') {
-					done();
-				} else {
-					done(false);
-				}
-			});
-		});
 	});
 
 	describe('#createReadStream()', function() {
-		it('it must be stream object', function() {
+		it('空参数创建的流,一定会触发end事件', function(done) {
+			var stream = jt.fs.createReadStream();
+
+			stream.resume();
+			stream.on('end', function() {
+				done();
+			});
+		});
+
+		it('返回流对象', function() {
 			var stream = jt.fs.createReadStream();
 			var methods = ['read', 'resume', 'pause', 'pipe'];
 
@@ -48,9 +40,19 @@ describe('jt.fs', function() {
 				}
 			}
 			assert.ok(true);
-		});	
+		});
 
-		it('read virtual file "c.js", it must be merged by "a.js" and "b.js"', function(done) {
+		it('读取空文件,一定会触发end事件', function(done) {
+			var stream = jt.fs.createReadStream('fs/null.js');
+			stream.on('data', function() {
+				done(false);
+			});
+			stream.on('end', function() {
+				done();
+			});
+		});
+
+		it('读取c.js, c.js由a.js和b.js合并而成，是否合并', function(done) {
 			var stream = jt.fs.createReadStream('fs/c.js');
 			var chunk = [];
 
@@ -62,7 +64,7 @@ describe('jt.fs', function() {
 				chunk = Buffer.concat(chunk);
 				var a = fs.readFileSync(path.join(jt.root, 'test/fs/a.js'));
 				var b = fs.readFileSync(path.join(jt.root, 'test/fs/b.js'));
-				var ret = Buffer.concat([a, new Buffer('\n'), b]);
+				var ret = Buffer.concat([a, b]);
 				if(chunk.toString() == ret.toString()) {
 					done();
 				} else {
@@ -71,7 +73,7 @@ describe('jt.fs', function() {
 			});
 		});
 
-		it('read real file "a.js", it must be equivalent to fs.readFile\'s result', function(done) {
+		it('读取a.js文件，等价于fs.readFile的结果', function(done) {
 			var stream = jt.fs.createReadStream('fs/a.js');
 			var chunk = [];
 
@@ -91,10 +93,35 @@ describe('jt.fs', function() {
 			});
 		});
 
+		it('process内不存在file或者value时应该报错', function() {
+			assert.throws(function() {
+				var stream = jt.fs.createReadStream('fs/h.js');
+			});
+		});
+	});
+
+	describe('#createReadCombineStream()', function() {
+		it('混合类型支持', function(done) {
+			var stream = jt.fs.createReadCombineStream([
+				'fs/i.js',
+				{
+					processor: 'string',
+					value: 'test'
+				}
+			]);
+
+			aggre(stream).on('data', function(buffer) {
+				if(buffer.toString() == 'stringtest') {
+					done();
+				} else {
+					done(false);
+				}
+			});
+		});
 	});
 
 	describe('#readFile()', function() {
-		it('it result must be equivalent to createReadStream', function(done) {
+		it('结果等价于createReadStream', function(done) {
 			var stream = jt.fs.createReadStream('fs/c.js');
 			var chunk = [];
 
@@ -114,7 +141,7 @@ describe('jt.fs', function() {
 			});
 		});
 
-		it('support processor option\'s file is be read', function(done) {
+		it('读取file文件内容', function(done) {
 			jt.fs.readFile('fs/j.js', function(data) {
 				if(data.toString() == 'string') {
 					done();
@@ -124,16 +151,32 @@ describe('jt.fs', function() {
 			});
 		});
 
-		it('对processor支持多个参数多processor，并将结果串行传递', function(done) {
-			jt.fs.processorDefine('test1', function(data, opt, done) {
-				var data = data.toString();
+		it('读取流文件', function(done) {
+			var stream = jt.fs.createReadStream('fs/c.js');
+			var chunk = [];
 
-				data += '1';
-				done(data);
+			jt.fs.readFile(stream, function(buffer) {
+				jt.fs.readFile('fs/c.js', function(buffer1) {
+					if(buffer.toString() == buffer1.toString()) {
+						done()
+					} else {
+						done(false);
+					}
+				});
 			});
+		});
+	});
 
-			jt.fs.readFile('fs/k.js', function(buffer) {
-				if(buffer.toString() == '01') {
+	describe('#writeFile()', function() {
+		it('自动创建文件夹', function(done) {
+			jt.fs.writeFile('fs/mkdir/write/file.js', 'test', function() {
+				var p = jt.fs.pathResolve('fs/mkdir/write');
+
+				var stats = fs.statSync(p);
+				fs.unlinkSync(jt.fs.pathResolve('fs/mkdir/write/file.js'));
+				fs.rmdirSync(jt.fs.pathResolve('fs/mkdir/write'));
+				fs.rmdirSync(jt.fs.pathResolve('fs/mkdir'));
+				if(stats.isDirectory()) {
 					done();
 				} else {
 					done(false);
@@ -141,9 +184,39 @@ describe('jt.fs', function() {
 			});
 		});
 
-		it('处理器的file参数多重引用的支持', function(done) {
-			jt.fs.readFile('fs/l.js', function(buffer) {
-				if(buffer.toString() == 'define("test", "string");') {
+		it('正确写入文件', function(done) {
+			jt.fs.writeFile('fs/mkdir1/write1/file1.js', 'test', function() {
+				var content = fs.readFileSync(jt.fs.pathResolve('fs/mkdir1/write1/file1.js'));
+
+				fs.unlinkSync(jt.fs.pathResolve('fs/mkdir1/write1/file1.js'));
+				fs.rmdirSync(jt.fs.pathResolve('fs/mkdir1/write1'));
+				fs.rmdirSync(jt.fs.pathResolve('fs/mkdir1'));
+				if(content.toString() == 'test') {
+					done();
+				} else {
+					done(false);
+				}
+			});
+		});
+	});
+
+	describe('#createWriteStream()', function() {
+		it('返回可写流对象', function(done) {
+			var stream = jt.fs.createWriteStream('fs/mkdir2/write2/file2.js');
+			var avail = true;
+
+			['write', 'end', 'writable'].forEach(function(value) {
+				if(!stream.hasOwnProperty(value) && !stream[value]) {
+					avail = false;
+				}
+			});
+			stream.write('test', function() {
+				stream.end();
+
+				fs.unlinkSync(jt.fs.pathResolve('fs/mkdir2/write2/file2.js'));
+				fs.rmdirSync(jt.fs.pathResolve('fs/mkdir2/write2'));
+				fs.rmdirSync(jt.fs.pathResolve('fs/mkdir2'));
+				if(avail) {
 					done();
 				} else {
 					done(false);
@@ -169,7 +242,7 @@ describe('jt.fs', function() {
 
 	describe('#search()', function() {
 		it('could be search file while exist in real file system', function(done) {
-			jt.fs.search('c.js', function(data) {
+			jt.fs.search('**/c.js', function(data) {
 				if(jt.fs.isVirtual(data[0])) {
 					done();
 				} else {
@@ -179,7 +252,7 @@ describe('jt.fs', function() {
 		});
 
 		it('it search virtual result must be in virtual file system', function(done) {
-			jt.fs.search('b.js', function(data) {
+			jt.fs.search('**/b.js', function(data) {
 				var file = jt.fs.pathConverter('fs/b.js'),
 					hasFile = false;
 
@@ -200,7 +273,7 @@ describe('jt.fs', function() {
 		it('搜索回调只会触发一次', function(done) {
 			var fired = false;
 
-			jt.fs.search('c.js', function(data) {
+			jt.fs.search('**/c.js', function(data) {
 				if(fired) {
 					done(false);
 				} else {
@@ -234,11 +307,21 @@ describe('jt.fs', function() {
 				}
 			});
 		});
+
+		it('正确忽略配置忽略文件夹', function(done) {
+			jt.fs.search('fs/ignore/*', function(data) {
+				if(data.length) {
+					done(false);
+				} else {
+					done();
+				}
+			});
+		});
 	});
 
 	describe('#searchVirtual()', function() {
-		it('could be fuzzy search', function() {
-			var result = jt.fs.searchVirtual('ForSearch.js'),
+		it('支持模糊搜索', function() {
+			var result = jt.fs.searchVirtual('**/*ForSearch.js'),
 				ret1 = jt.fs.pathConverter('fs/testForSearch.js'),
 				ret2 = jt.fs.pathConverter('fs/reTestForSearch.js'),
 				hasRet1 = false, hasRet2 = false;
@@ -257,6 +340,27 @@ describe('jt.fs', function() {
 			} else {
 				assert.ok(false);
 			}
+		});
+
+		it('真实文件不在虚拟文件无法搜索到', function() {
+			var result = jt.fs.searchVirtual('fs/a.js');
+
+			if(!result[0]) {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
+		});
+
+		it('正确忽略配置忽略文件夹', function(done) {
+			jt.fs.search('fs/ignore/ignoreFile.js', function(data) {
+
+				if(data.length) {
+					done(false);
+				} else {
+					done();
+				}
+			});
 		});
 	});
 
@@ -295,32 +399,250 @@ describe('jt.fs', function() {
 		});
 	});
 
-	describe('private function', function() {
-		it('#_map2combo(), prevent duplicate references to cause a stack overflow', function() {
-			jt.privateFs.__get__('_map2combo')('fs/d.js');
+	describe('#pathResolve()', function() {
+		it('正常解析 ~/解析为 base路径', function() {
+			var resolve = jt.fs.pathResolve('~/');
+
+			if(resolve == jt.config.base) {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
 		});
 
-		describe('#_readSimpleFile()', function() {		
-			var filename = path.join(jt.root, 'test/fs/fs.js');
-			it('it use fs.readFile but not file return null', function(done) {
-				jt.privateFs.__get__('_readSimpleFile')(filename, function(data) {
-					if(data.toString() === '') {
+		it('正常解析 ~/**/**.js', function() {
+			var resolve = jt.fs.pathResolve('~/**/**.js');
+
+			if(resolve == path.join(jt.config.base, '**/**.js')) {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
+		});
+
+		it('正常解析 ~/../', function() {
+			var resolve = jt.fs.pathResolve('~/../');
+
+			if(resolve == path.resolve(jt.config.base, '../')) {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
+		});
+
+		it('正常解析 ~/./', function() {
+			var resolve = jt.fs.pathResolve('~/./');
+
+			if(resolve == jt.config.base) {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
+		});
+
+		var relative = path.join(jt.config.base, 'fs');
+		it('正常解析 ./', function() {
+			var resolve = jt.fs.pathResolve('./', relative);
+
+			if(resolve == relative) {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
+		});
+
+		it('正常解析 ../', function() {
+			var resolve = jt.fs.pathResolve('../', relative);
+
+			if(resolve == jt.config.base) {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
+		});
+
+		it('正常解析 /', function() {
+			var resolve = jt.fs.pathResolve('/');
+
+			if(resolve == '/') {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
+		});
+	});
+
+	describe('#existsSync()', function() {
+		it('正常判断虚拟文件', function() {
+			if(jt.fs.existsSync('fs/c.js')) {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
+		});
+
+		it('正常判断真实文件', function() {
+			if(jt.fs.existsSync('fs/a.js')) {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
+		});
+
+		it('正常判断不存在文件', function() {
+			if(!jt.fs.existsSync('notExist/notExist.js')) {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
+		});
+	});
+
+	describe('#processor', function() {
+		it('没有定义file或者value报错', function() {
+			assert.throws(function() {
+				jt.fs.createReadStream('processor/notFileValue.js', function() {});
+			});
+		});
+
+		it('processor定义值不存在时报错', function() {
+			assert.throws(function() {
+				jt.fs.createReadStream('processor/notProcessor.js');
+			});
+		});
+
+		it('参数正确传递', function(done) {
+			jt.fs.assign('___TEST_PROCESSOR_DEFINE', function(opt, info) {
+				if(opt.name == 'name' && opt.file == "~/fs/c.js" && opt.dir == jt.config.base) {
+					if(info.dir == jt.config.base) {
+						done();
+					}
+				} else {
+					done(false);
+				}
+				return through();
+			});
+			jt.fs.createReadCombineStream([{
+				processor: "___TEST_PROCESSOR_DEFINE",
+				file: "~/fs/c.js",
+				___TEST_PROCESSOR_DEFINE: {
+					name: 'name',
+					file: "~/fs/c.js",
+					dir: jt.config.base
+				}
+			}]);
+		});
+
+		it('第二个参数只有一个属性', function(done) {
+			jt.fs.assign('___TEST_PROCESSOR_DEFINE1', function(opt, info) {
+				var hasOnly = true;
+
+				for(var i in info) {
+					if(i != 'dir') {
+						hasOnly = false;
+					}
+				}
+				if(hasOnly) {
+					done();
+				} else {
+					done(false);
+				}
+				return through();
+			});
+			jt.fs.createReadCombineStream([{
+				processor: "___TEST_PROCESSOR_DEFINE1",
+				file: "~/fs/c.js",
+				___TEST_PROCESSOR_DEFINE1: {
+					name: 'name',
+					file: "~/fs/c.js",
+					dir: jt.config.base
+				}
+			}]);
+		});
+
+		it('value值正确传递', function(done) {
+			var obj = jt.fs.createReadCombineStream([{
+				value: 'test',
+				processor: 'string'
+			}]);
+
+			aggre(obj).on('data', function(buffer) {
+				if(buffer.toString() == 'test') {
+					done();
+				} else {
+					done(false);
+				}
+			});
+		});
+
+		it('处理器的file参数多重引用的支持', function(done) {
+			jt.fs.readFile('fs/l.js', function(buffer) {
+				if(buffer.toString() == 'string') {
+					done();
+				} else {
+					done(false);
+				}
+			});
+		});
+
+		it('参数file支持模糊搜索', function(done) {
+			jt.fs.readComboFile({
+				file: '~/build/*'
+			}, function(buffer) {
+				if(buffer.toString() == '123') {
+					done();
+				} else {
+					done(false);
+				}
+			});
+		});
+
+		it('解析数组file', function(done) {
+			jt.fs.readComboFile({
+				file: [
+					'~/build/*',
+					'fs/f.js'
+				]},
+			function(buffer) {
+				if(buffer.toString() == '123string') {
+					done();
+				} else {
+					done(false);
+				}
+			});
+		});
+
+		it('多个参数file格式化为单参数', function(done) {
+			var doned = false;
+			jt.fs.assign('optionTest', function(options, info) {
+				if(!doned) {
+					doned = true;
+					if(!Array.isArray(options.file)) {
 						done();
 					} else {
-						done(true);
+						done(false);
 					}
-				});
+				}
+				return through();
+			});
+			jt.fs.readComboFile({
+				processor: 'optionTest',
+				file: '~/build/*',
+				optionTest: function() {
+					return {file: this.file}
+				}
+			});
+		});
+
+		it('加载cwd processor模块', function(done) {
+			jt.fs.readFile('fs/through.js', function(buffer) {
+				if(buffer.toString() == 'test') {
+					done();
+				} else {
+					done(false);
+				}
 			});
 
-			it('it must return buffer', function(done) {
-				jt.privateFs.__get__('_readSimpleFile')(filename, function(data) {
-					if(Buffer.isBuffer(data)) {
-						done();
-					} else {
-						done(true);
-					}
-				});
-			});
 		});
 	});
 });

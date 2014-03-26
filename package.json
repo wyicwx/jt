@@ -9,12 +9,16 @@
 	},
 	"dependencies": {
 		"colors": "~0.6.1",
-		"jsmin2": "~1.1.7",
+		"jt-jsmin": "~0.0.1",
 		"mime": "~1.2.11",
 		"mutils": "~0.0.5",
-		"uglify-js": "~2.4.0",
-		"yuicompressor": "~2.4.8",
-		"less": "~1.6.3"
+		"jt-uglify": "~0.0.1",
+		"minimatch": "~0.2.14",
+		"through2": "~0.4.1",
+		"cmd-interface": "~0.0.3",
+		"akostream": "~0.0.1",
+		"glob": "~3.2.9",
+		"resolve": "~0.6.1"
 	},
 	"devDependencies": {
 		"mocha": "*",

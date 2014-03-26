@@ -6,173 +6,97 @@ require('./_common.js');
 var compressor = jt.compressor;
 
 describe('jt.compressor', function() {
-	describe('#js()', function() {
-		it('压缩后尺寸变小且压缩后不为空', function(done) {
-			jt.fs.readFile('fs/c.js', function(buffer) {
-				var origSize = buffer.length;
-				jt.compressor.js(buffer, function(buffer) {
-					if(buffer.length && buffer.length <= origSize) {
-						done();
-					} else {
-						done(false);
-					}
-				});
-			});
-		});
 
-		it('返回值是buffer', function(done) {
-			jt.fs.readFile('fs/c.js', function(buffer) {
-				jt.compressor.js(buffer, function(buffer) {
-					if(Buffer.isBuffer(buffer)) {
-						done();
-					} else {
-						done(false);
-					}
-				});
-			});
-		});
-
-		it('扩展compressJs支持', function(done) {
-			jt.fs.readFile('fs/a.js', function(buffer) {
-				jt.compressor.js(buffer, function(data1) {
-
-					jt.fs.readFile('fs/compressor/a.js', function(data2) {
-						if(data1.toString() == data2.toString()) {
-							done();
-						} else {
-							done(false);
-						}
-					});
-				});
-			});
-		});
+	it('Minifyjs正常运行', function() {
+		jt.fs.readFile('processor/Minifyjs.js', function(data) {});
 	});
 
-	describe('#css()', function() {
-		it('压缩后尺寸变小且压缩后不为空', function(done) {
-			jt.fs.readFile('fs/c.js', function(buffer) {
-				var origSize = buffer.length;
-				jt.compressor.css(buffer, function(buffer) {
-					if(buffer.length && buffer.length <= origSize) {
-						done();
-					} else {
-						done(false);
-					}
-				});
-			});
-		});
 
-		it('返回值是buffer', function(done) {
-			jt.fs.readFile('fs/c.js', function(buffer) {
-				jt.compressor.css(buffer, function(buffer) {
-					if(Buffer.isBuffer(buffer)) {
-						done();
-					} else {
-						done(false);
-					}
-				});
-			});
-		});
-
-		it('扩展compressCss支持', function(done) {
-			jt.fs.readFile('fs/a.css', function(buffer) {
-				jt.compressor.css(buffer, function(data1) {
-
-					jt.fs.readFile('fs/compressor/a.css', function(data2) {
-						if(data1.toString() == data2.toString()) {
-							done();
-						} else {
-							done(false);
-						}
-					});
-				});
-			});
-		});
+	it('compress -f 单文件', function(done) {
+		jt.commander.run(['compress', '-f', 'fs/m.js']);
+		setTimeout(function() {
+			var file = jt.fs.pathResolve('fs/m.min.js');
+			if(fs.existsSync(file)) {
+				fs.unlinkSync(file);
+				done();
+			} else {
+				done(false);
+			}
+		}, 1000);
 	});
 
-	describe('#bestJs()', function() {
-		it('压缩后尺寸变小且压缩后不为空', function(done) {
-			jt.fs.readFile('fs/c.js', function(buffer) {
-				var origSize = buffer.length;
-				jt.compressor.bestJs(buffer, function(buffer) {
-					if(buffer.length && buffer.length <= origSize) {
-						done();
-					} else {
-						done(false);
-					}
-				});
-			});
-		});
-
-		it('返回格式校验,参数1buffer,参数2最小压缩参数信息,参数3所有信息.', function(done) {
-			jt.fs.readFile('fs/c.js', function(buffer) {
-				jt.compressor.bestJs(buffer, function(buffer, bestInfo, all) {
-					var availd = true;
-					if(!Buffer.isBuffer(buffer)) {
-						availd = false;
-					}
-					if(!jt.utils.isObject(buffer)) {
-						availd = false;
-					}
-					if(!jt.utils.isArray(all)) {
-						availd = false;
-					}
-
-					var has = false;
-
-					jt.utils.each(all, function(item) {
-						if(item == bestInfo) has = true;
-					});
-
-					if(has && availd) {
-						done();
-					} else {
-						done(false);
-					}
-				});
-			});
-		});
+	it('compress -f gzip', function(done) {
+		jt.commander.run(['compress', '-f', 'fs/l.js', '--gzip']);
+		setTimeout(function() {
+			var file = jt.fs.pathResolve('fs/l.min.js');
+			if(fs.existsSync(file)) {
+				fs.unlinkSync(file);
+				done();
+			} else {
+				done(false);
+			}
+		}, 1000);
 	});
 
-	describe('#html()', function() {
-		it('压缩后尺寸变小且压缩后不为空', function(done) {
-			jt.fs.readFile('fs/a.html', function(buffer) {
-				var origSize = buffer.length;
-				jt.compressor.html(buffer, function(buffer) {
-					if(buffer.length && buffer.length <= origSize) {
-						done();
-					} else {
-						done(false);
-					}
-				});
-			});
-		});
+	it('compress -f --out', function(done) {
+		jt.commander.run(['compress', '-f', 'fs/l.js', '--out=~/fs/ignore']);
+		setTimeout(function() {
+			var file = jt.fs.pathResolve('fs/ignore/l.min.js');
+			if(fs.existsSync(file)) {
+				fs.unlinkSync(file);
+				done();
+			} else {
+				done(false);
+			}
+		}, 1000);
+	});
 
-		it('返回值是buffer', function(done) {
-			jt.fs.readFile('fs/a.html', function(buffer) {
-				jt.compressor.html(buffer, function(buffer) {
-					if(Buffer.isBuffer(buffer)) {
-						done();
-					} else {
-						done(false);
-					}
-				});
+	it('compress -f 多文件', function(done) {
+		jt.commander.run(['compress', '-f', 'fs/buildF1.js', 'fs/buildF2.js', 'fs/buildF3.js']);
+		process.stdin.emit('data', 'all\r\n');
+		setTimeout(function() {
+			var file1 = jt.fs.pathResolve('fs/buildF1.min.js');
+			var file2 = jt.fs.pathResolve('fs/buildF2.min.js');
+			var file3 = jt.fs.pathResolve('fs/buildF3.min.js');
+			var has = true;
+			[file1, file2, file3].forEach(function(file) {
+				if(fs.existsSync(file)) {
+					fs.unlinkSync(file);
+				} else {
+					has = false;
+				}
 			});
-		});
 
-		it('扩展compressHtml支持', function(done) {
-			jt.fs.readFile('fs/a.html', function(buffer) {
-				jt.compressor.html(buffer, function(data1) {
+			if(has) {
+				done();
+			} else {
+				done(false);
+			}
+		}, 1000);
+	});
 
-					jt.fs.readFile('fs/compressor/a.html', function(data2) {
-						if(data1.toString() == data2.toString()) {
-							done();
-						} else {
-							done(false);
-						}
-					});
-				});
-			});
+	it('compress -f 正常显示help,没有报错', function() {
+		jt.commander.run(['compress', '-f']);
+	});
+
+	it('compress 正常显示help,没有报错', function() {
+		jt.commander.run(['compress']);
+	});
+
+	it('compress 取消压缩', function() {
+		jt.commander.run(['compress', '-f', 'fs/buildF1.js', 'fs/buildF2.js', 'fs/buildF3.js']);
+		process.stdin.emit('data', '\r\n');
+		var file1 = jt.fs.pathResolve('fs/buildF1.min.js');
+		var file2 = jt.fs.pathResolve('fs/buildF2.min.js');
+		var file3 = jt.fs.pathResolve('fs/buildF3.min.js');
+		var has = true;
+		[file1, file2, file3].forEach(function(file) {
+			if(fs.existsSync(file)) {
+				fs.unlinkSync(file);
+				assert.ok(false);
+			} else {
+				assert.ok(true);
+			}
 		});
 	});
 });
