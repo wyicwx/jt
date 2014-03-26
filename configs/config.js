@@ -7,8 +7,10 @@ var config = {
 	project: require('./project.js'),
 	server: require('./server.js'),
 	compressor: {
-		gzip: true
-	}
+		'jsmin': 'jt-jsmin',
+		'uglify': 'jt-uglify'
+	},
+	plugins: []
 };
 
 module.exports = config;
