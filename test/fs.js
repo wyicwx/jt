@@ -3,7 +3,7 @@ var assert = require('assert'),
 	path = require('path');
 
 var through = require('through2');
-var aggre = require('akoStream').aggre;
+var aggre = require('akostream').aggre;
 
 require('./_common.js');
 
