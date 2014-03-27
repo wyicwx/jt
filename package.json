@@ -9,7 +9,7 @@
 	},
 	"dependencies": {
 		"colors": "~0.6.1",
-		"jt-jsmin": "~0.0.1",
+		"jt-jsmin": "~0.0.2",
 		"mime": "~1.2.11",
 		"mutils": "~0.0.5",
 		"jt-uglify": "~0.0.1",
