@@ -2,7 +2,7 @@
 
 'use strict';
 
-var jt = module.exports = require('../lib/kernel.js');
+var jt = module.exports = require('../index.js');
 
 var fs = require('fs');
 var path = require('path');
