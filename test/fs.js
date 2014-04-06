@@ -533,16 +533,9 @@ describe('jt.fs', function() {
 			}]);
 		});
 
-		it('第二个参数只有一个属性', function(done) {
+		it('第二参数有dir、isValue、filePath', function(done) {
 			jt.fs.assign('___TEST_PROCESSOR_DEFINE1', function(opt, info) {
-				var hasOnly = true;
-
-				for(var i in info) {
-					if(i != 'dir') {
-						hasOnly = false;
-					}
-				}
-				if(hasOnly) {
+				if(info.hasOwnProperty('dir') && info.hasOwnProperty('type') && info.hasOwnProperty('filePath')) {
 					done();
 				} else {
 					done(false);
@@ -557,6 +550,21 @@ describe('jt.fs', function() {
 					file: "~/fs/c.js",
 					dir: jt.config.base
 				}
+			}]);
+		});
+
+		it('type正确指向value', function(done) {
+			jt.fs.assign('___TEST_PROCESSOR_DEFINE2', function(opt, info) {
+				if(info.type == 'value') {
+					done();
+				} else {
+					done(false);
+				}
+				return through();
+			});
+			jt.fs.createReadCombineStream([{
+				processor: "___TEST_PROCESSOR_DEFINE2",
+				value: "test"
 			}]);
 		});
 
