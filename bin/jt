@@ -33,6 +33,7 @@ if(cwd) {
 	jt.config = require(path.join(jt.cwd, '/config.js'));
 	jt.init();
 	// 执行命令
+	jt.argv = jt.commander.parseArgv(process.argv);
 	jt.commander.run();
 } else {
 	// init
