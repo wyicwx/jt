@@ -1,13 +1,10 @@
 var assert = require('assert'),
-	fs = require('fs'),
-	path = require('path'),
-	rewire = require('rewire');
+	path = require('path');
 
 var jt = require('../lib/kernel.js');
 jt.cwd = __dirname;
-jt.config = require('../configs/config.js');
-jt.config.base = path.resolve(__dirname);
-var fsConfig = fs = {
+
+var fsConfig = {
 	list : {
 		"fs/": {
 			"ignore/": {
@@ -103,7 +100,7 @@ var fsConfig = fs = {
 		"fs/ignore/*"
 	]
 };
-jt.config.project = {
+var projectConfig = {
 	'Aproject': {
 		files: [
 			"fs/a.js",
@@ -136,13 +133,10 @@ jt.config.project = {
 		files: ['fs/a.js']
 	}
 };
-
-jt.config.fs = jt.utils.clone(fsConfig);
+jt.setConfig('base', path.resolve(__dirname));
+jt.setConfig('fs', fsConfig);
+jt.setConfig('project', projectConfig);
 jt.init();
-jt.config.fs = jt.utils.clone(fsConfig);
-jt.privateFs = rewire('../lib/fs.js');
-jt.privateServer = rewire('../lib/server.js');
-
 var through = require('through2');
 
 jt.fs.assign('string', function(opt) {

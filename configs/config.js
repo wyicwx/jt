@@ -1,10 +1,10 @@
 var config = {
-	base: '../', 
+	base: null, 
 	fs: {
-		list: require('./fs.js'),
+		list: {},
 		ignorePath: []
 	},
-	project: require('./project.js'),
+	project: {},
 	server: require('./server.js'),
 	compressor: {
 		'jsmin': 'jt-jsmin',

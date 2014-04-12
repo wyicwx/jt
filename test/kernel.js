@@ -7,5 +7,15 @@ describe('kernel', function() {
 		assert.throws(function() {
 			jt.init();
 		});
-	});	
+	});
+
+	it('jt.setConfig', function() {
+		jt.setConfig('a.b.c.d.e.f', 1);
+
+		if(jt.config.a.b.c.d.e.f == 1) {
+			assert.ok(true);
+		} else {
+			assert.ok(false);
+		}
+	});
 });

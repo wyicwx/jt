@@ -15,15 +15,14 @@
 		"jt-uglify": "~0.0.1",
 		"minimatch": "~0.2.14",
 		"through2": "~0.4.1",
-		"cmd-interface": "~0.0.3",
+		"cmd-interface": "~0.0.5",
 		"akostream": "~0.0.1",
 		"glob": "~3.2.9",
 		"resolve": "~0.6.1"
 	},
 	"devDependencies": {
 		"mocha": "*",
-		"blanket": "*",
-		"rewire": "*"
+		"blanket": "*"
 	},
 	"scripts": {
 		"test": "make test-all"
