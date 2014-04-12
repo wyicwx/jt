@@ -594,7 +594,7 @@ describe('jt.fs', function() {
 		});
 
 		it('参数file支持模糊搜索', function(done) {
-			jt.fs.readComboFile({
+			jt.fs.readCombineFile({
 				file: '~/build/*'
 			}, function(buffer) {
 				if(buffer.toString() == '123') {
@@ -606,7 +606,7 @@ describe('jt.fs', function() {
 		});
 
 		it('解析数组file', function(done) {
-			jt.fs.readComboFile({
+			jt.fs.readCombineFile({
 				file: [
 					'~/build/*',
 					'fs/f.js'
@@ -633,7 +633,7 @@ describe('jt.fs', function() {
 				}
 				return through();
 			});
-			jt.fs.readComboFile({
+			jt.fs.readCombineFile({
 				processor: 'optionTest',
 				file: '~/build/*',
 				optionTest: function() {
