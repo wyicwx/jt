@@ -10,14 +10,14 @@ describe('jt.commander', function() {
 	});
 
 	it('choose 选择某一项', function(done) {
-		var count = parseInt(Math.random() * 100);
+		var count = parseInt(Math.random() * 100, 10);
 		var ar = [];
 
 		for(var i = 0; i < count; i++) {
 			ar[i] = Math.random();
 		}
 
-		var select = parseInt(Math.random() * count);
+		var select = parseInt(Math.random() * count, 10);
 		jt.commander.choose(ar, function(data) {
 			if(data.length == 1 && data[0] == ar[select-1]) {
 				done();
@@ -57,5 +57,15 @@ describe('jt.commander', function() {
 			}
 		});
 		process.stdin.emit('data', '1');
+	});
+
+	it('run函数运行后，可以在jt.argv上读取解析命令后的对象', function() {
+		jt.commander.run(['-b', '-c', '-d', 'asdf']);
+
+		if(jt.argv.b && jt.argv.c && jt.argv.d[0] == 'asdf') {
+			assert.ok(true);
+		} else {
+			assert.ok(false);
+		}
 	});
 });

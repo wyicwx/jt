@@ -137,7 +137,6 @@ jt.config.project = {
 	}
 };
 
-
 jt.config.fs = jt.utils.clone(fsConfig);
 jt.init();
 jt.config.fs = jt.utils.clone(fsConfig);

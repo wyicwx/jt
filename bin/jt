@@ -26,6 +26,47 @@ function checkJtConfig() {
 	return false;
 }
 
+function initConfig() {	
+	jt.utils.mkdir('.jt', './');
+
+	function cpFile() {
+		['config.js', 'fs.js', 'project.js', 'server.js'].forEach(function(file) {
+			var defaultConfig = fs.createReadStream(path.join(jt.root, 'configs/'+file));
+			var targetConfig = fs.createWriteStream(path.join('./.jt/', file));
+			defaultConfig.pipe(targetConfig, {
+				flags: 'w',
+				encoding: 'utf-8',
+				mode: '755'
+			});
+		});
+	}
+
+	cpFile();
+}
+// init
+jt.commander.command({
+	cmd: 'init', 
+	description: 'init jt config file',
+	visible: false,
+	handler: function(opt, argv) {
+		var fs = require('fs'),
+			path = require('path');
+
+		var exist = fs.existsSync('./.jt');
+		if(exist) {
+			jt.commander.read('  jt config files was existed, override ? (Y/N)', function(data) {
+				if(data.toLowerCase() == 'y') {
+					initConfig();
+					console.log('  Override jt config in '+path.resolve('./.jt'));
+				}
+			});
+		} else {
+			initConfig();
+
+			console.log('  Initialized jt config in '+path.resolve('./.jt'));
+		}
+	}
+});
 // use jt init command 
 var cwd = checkJtConfig();
 if(cwd) {
@@ -33,37 +74,8 @@ if(cwd) {
 	jt.config = require(path.join(jt.cwd, '/config.js'));
 	jt.init();
 	// 执行命令
-	jt.argv = jt.commander.parseArgv(process.argv);
 	jt.commander.run();
 } else {
-	// init
-	jt.commander.command({
-		cmd: 'init', 
-		description: 'init jt config file',
-		notShow: true,
-		handler: function(opt, argv) {
-			var fs = require('fs'),
-				path = require('path');
-
-			jt.utils.mkdir('.jt', './');
-
-			function cpFile() {
-				['config.js', 'fs.js', 'project.js', 'server.js'].forEach(function(file) {
-					var defaultConfig = fs.createReadStream(path.join(jt.root, 'configs/'+file));
-					var targetConfig = fs.createWriteStream(path.join('./.jt/', file));
-					defaultConfig.pipe(targetConfig, {
-						flags: 'w',
-						encoding: 'utf-8',
-						mode: '755'
-					});
-				});
-			}
-
-			cpFile();
-			console.log('  Initialized jt config in '+path.resolve('./.jt'));
-		}
-	});
-
 	// parse commander
 	if(process.argv[2] == 'init') {
 		jt.commander.run(['init']);
