@@ -7,8 +7,13 @@ var config = {
 	project: {},
 	server: require('./server.js'),
 	compressor: {
-		'jsmin': 'jt-jsmin',
-		'uglify': 'jt-uglify'
+		'js': {
+			'jsmin': 'jt-jsmin',
+			'uglify': 'jt-uglify'
+		},
+		'css': {
+			'minicss': 'jt-cssminify'
+		}
 	},
 	plugins: []
 };

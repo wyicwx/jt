@@ -1,6 +1,6 @@
 {
 	"name": "jt-cli",
-	"version": "0.1.9",
+	"version": "0.2.0",
 	"description": "Javascript developer toolkit, based on virtual file system.",
 	"author": {
 		"name": "wyicwx",
@@ -10,6 +10,7 @@
 	"dependencies": {
 		"colors": "~0.6.1",
 		"jt-jsmin": "~0.0.2",
+		"jt-cssminify": "~0.0.2",
 		"mime": "~1.2.11",
 		"mutils": "~0.0.5",
 		"jt-uglify": "~0.0.1",
