@@ -253,7 +253,7 @@ describe('jt.fs', function() {
 
 		it('it search virtual result must be in virtual file system', function(done) {
 			jt.fs.search('**/b.js', function(data) {
-				var file = jt.fs.pathConverter('fs/b.js'),
+				var file = jt.fs.pathResolve('fs/b.js'),
 					hasFile = false;
 
 				data.forEach(function(value) {
@@ -322,8 +322,8 @@ describe('jt.fs', function() {
 	describe('#searchVirtual()', function() {
 		it('支持模糊搜索', function() {
 			var result = jt.fs.searchVirtual('**/*ForSearch.js'),
-				ret1 = jt.fs.pathConverter('fs/testForSearch.js'),
-				ret2 = jt.fs.pathConverter('fs/reTestForSearch.js'),
+				ret1 = jt.fs.pathResolve('fs/testForSearch.js'),
+				ret2 = jt.fs.pathResolve('fs/reTestForSearch.js'),
 				hasRet1 = false, hasRet2 = false;
 
 			result.forEach(function(value) {
@@ -366,15 +366,15 @@ describe('jt.fs', function() {
 
 	describe('#map2local()', function() {
 		it('it exist in real file system', function(done) {
-			var filename = jt.fs.pathConverter('fs/toRemove.js');
+			var filename = jt.fs.pathResolve('fs/toRemove.js');
 			if(fs.existsSync(filename)) {
-				fs.unlinkSync(jt.fs.pathConverter(filename));
+				fs.unlinkSync(jt.fs.pathResolve(filename));
 			}
 
 			jt.fs.map2local(filename, function() {
 				if(fs.existsSync(filename)) {
 					done();
-					fs.unlinkSync(jt.fs.pathConverter(filename));
+					fs.unlinkSync(jt.fs.pathResolve(filename));
 				}
 			});
 		});
