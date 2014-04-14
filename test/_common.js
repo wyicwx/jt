@@ -136,6 +136,7 @@ var projectConfig = {
 jt.setConfig('base', path.resolve(__dirname));
 jt.setConfig('fs', fsConfig);
 jt.setConfig('project', projectConfig);
+jt.setConfig('test.get.config', 1)
 jt.init();
 var through = require('through2');
 

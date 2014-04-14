@@ -18,4 +18,14 @@ describe('kernel', function() {
 			assert.ok(false);
 		}
 	});
+
+	it('jt.getConfig', function() {
+		var config = jt.getConfig('test.get.config');
+
+		if(config == 1) {
+			assert.ok(true);
+		} else {
+			assert.ok(false);
+		}
+	});
 });
