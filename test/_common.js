@@ -2,7 +2,7 @@ var assert = require('assert'),
 	path = require('path');
 
 var jt = require('../lib/kernel.js');
-jt.cwd = __dirname;
+jt.configDir = __dirname;
 
 var fsConfig = {
 	list : {

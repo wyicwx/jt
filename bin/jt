@@ -30,7 +30,7 @@ function initConfig() {
 	jt.utils.mkdir('.jt', './');
 
 	function cpFile() {
-		['config.js', 'server.js'].forEach(function(file) {
+		['index.js', 'package.json'].forEach(function(file) {
 			var defaultConfig = fs.createReadStream(path.join(jt.root, 'configs/'+file));
 			var targetConfig = fs.createWriteStream(path.join('./.jt/', file));
 			defaultConfig.pipe(targetConfig, {
@@ -70,12 +70,14 @@ jt.commander.command({
 // use jt init command 
 var cwd = checkJtConfig();
 if(cwd) {
-	jt.cwd = cwd;
+	jt.configDir = cwd;
 	try {
-		require(jt.cwd);
+		require(jt.configDir);
+		var pack = require(path.join(jt.configDir, 'package.json'));
+		jt.config.plugins = jt.config.plugins.concat(pack.dependencies || []);
 	} catch(e) {
 		// 兼容老的配置方式
-		jt.config = require(path.join(jt.cwd, 'config.js'));
+		jt.config = require(path.join(jt.configDir, 'config.js'));
 	}
 	jt.init();
 	// 执行命令

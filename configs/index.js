@@ -1,0 +1,1 @@
+jt.setConfig('base', '../');
