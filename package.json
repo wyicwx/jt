@@ -1,6 +1,6 @@
 {
 	"name": "jt-cli",
-	"version": "0.2.2",
+	"version": "0.2.3",
 	"description": "Javascript developer toolkit, based on virtual file system.",
 	"author": {
 		"name": "wyicwx",
