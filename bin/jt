@@ -17,9 +17,7 @@ function checkJtConfig() {
 		execuDir = path.join(commandDir.join(path.sep), '/.jt');
 
 		if(fs.existsSync(execuDir)) {
-			if(fs.existsSync(execuDir + '/config.js')) {
-				return execuDir;
-			}
+			return execuDir;
 		}
 		commandDir.pop();
 	}
