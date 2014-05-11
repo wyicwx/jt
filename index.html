@@ -1,36 +1,43 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Jt : 辅助开发及半自动化工具集" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Jt by wyicwx</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Jt</title>
   </head>
-
   <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/wyicwx/jt">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/wyicwx/jt/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/wyicwx/jt/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/wyicwx/jt">View on GitHub</a>
+    <div class="wrapper">
 
-          <h1 id="project_title">Jt</h1>
-          <h2 id="project_tagline">辅助开发及半自动化工具集</h2>
+      <section>
+        <div id="title">
+          <h1>Jt</h1>
+          <p>辅助开发及半自动化工具集</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/wyicwx">wyicwx</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/wyicwx/jt/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/wyicwx/jt/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
         <h1>
 <a name="%E5%89%8D%E7%AB%AF%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B7%A5%E5%85%B7-jt" class="anchor" href="#%E5%89%8D%E7%AB%AF%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B7%A5%E5%85%B7-jt"><span class="octicon octicon-link"></span></a>前端自动化工具 JT</h1>
 
@@ -100,12 +107,9 @@ Option:
 <p>为了和开发目录的代码区分开来，jt使用单独文件夹来包括所有配置文件和扩展包</p>
 
 <pre><code>.jt
- // 配置文件入口，配置文件过大可以在内部require其他文件来拆分
- - index.js        
- // 包文件，目前用处就是来指引jt引用index.js，保留用，后期会和npm搭配
- - package.json    
- // node包文件，自己开发的模块也存放在这里
- - node_module/    
+ - index.js    // 配置文件入口，配置文件过大可以在内部require其他文件来拆分
+ - package.json    // 包文件，目前用处就是来指引jt引用index.js，保留用，后期会和npm搭配
+ - node_module/    // node包文件，自己开发的模块也存放在这里 
 </code></pre>
 
 <h2>
@@ -192,6 +196,8 @@ jt.setConfig('fs.list', list);
 }
 </code></pre>
 
+<p>[jt.config.base] 是jt.config.base根据本地文件系统格式化成的绝对路径</p>
+
 <p>2、processor定义</p>
 
 <pre><code>var list = {
@@ -199,9 +205,9 @@ jt.setConfig('fs.list', list);
         "libs": {
             'jquery.js': [
                 {
-                    processor: ['jt-seajs'],   // processor可以定义多个处理器，按定义先后处理
-                    file: DEV_DIR + 'libs/jquery.js', // file指文件路径，允许传入本地文件和虚拟文件
-                    'jt-seajs': {  // 作为参数传递给jt-seajs
+                    processor: ['jt-seajs'],    // processor可以定义多个处理器，按定义先后处理
+                    file: DEV_DIR + 'libs/jquery.js',    // file指文件路径，允许传入本地文件和虚拟文件
+                    'jt-seajs': {    // 作为参数传递给jt-seajs
                         name: 'jquery'
                     }
                 }
@@ -375,17 +381,9 @@ jt.setConfig('server.list', list);
 
 <p>开发JT的初衷只是为了弥补os x下没有fiddler的autoresponder功能的缺陷，原先只是一个简单的代理程序，但随着应用面不断的扩大，需要应付的场景越来越复杂，于是有了这个项目。</p>
       </section>
-    </div>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Jt maintained by <a href="https://github.com/wyicwx">wyicwx</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
     </div>
-
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     
-
   </body>
 </html>
