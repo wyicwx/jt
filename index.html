@@ -64,8 +64,6 @@ v0.10.25
 
 <p><em>请一定加上-g参数，jt的名称为jt-cli请不要打错</em></p>
 
-<p>PS: 开发机如何使用npm？ 参考OA文章 <a href="http://km.oa.com/group/502/articles/show/167873">内部 Node.JS NPM 镜像使用方法</a></p>
-
 <p>3、生成配置文件</p>
 
 <p>cd 到项目根目录下,执行下面命令</p>
@@ -102,9 +100,12 @@ Option:
 <p>为了和开发目录的代码区分开来，jt使用单独文件夹来包括所有配置文件和扩展包</p>
 
 <pre><code>.jt
- - index.js        // 配置文件入口，配置文件过大可以在内部require其他文件来拆分
- - package.json    // 包文件，目前用处就是来指引jt引用index.js，保留用，后期会和npm搭配
- - node_module/    // node包文件，自己开发的模块也存放在这里
+ // 配置文件入口，配置文件过大可以在内部require其他文件来拆分
+ - index.js        
+ // 包文件，目前用处就是来指引jt引用index.js，保留用，后期会和npm搭配
+ - package.json    
+ // node包文件，自己开发的模块也存放在这里
+ - node_module/    
 </code></pre>
 
 <h2>
