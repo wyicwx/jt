@@ -105,15 +105,12 @@ Option:
  - index.js        // 配置文件入口，配置文件过大可以在内部require其他文件来拆分
  - package.json    // 包文件，目前用处就是来指引jt引用index.js，保留用，后期会和npm搭配
  - node_module/    // node包文件，自己开发的模块也存放在这里
-
-
-
 </code></pre>
 
 <h2>
 <a name="%E6%96%87%E4%BB%B6%E9%85%8D%E7%BD%AE" class="anchor" href="#%E6%96%87%E4%BB%B6%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>文件配置</h2>
 
-<p>一般配置卸载index.js内，因为index.js也是js文件，可以通过require函数来引入多个js文件，从而拆分配置文件</p>
+<p>一般配置写在index.js内，因为index.js也是js文件，可以通过require函数来引入多个js文件，从而拆分配置文件</p>
 
 <pre><code>jt.setConfig('base', '../');
 </code></pre>
@@ -167,16 +164,14 @@ Option:
 jt.setConfig('fs.list', list);
 </code></pre>
 
-<p>下面按美图私语的配置举例</p>
-
 <p>1、单个虚拟文件的定义</p>
 
-<pre><code>var MEITUSIYU_DIR = "~/template/source/Meitusiyu/"; // 开发目录和虚拟文件目录尽量不要同一个目录，生成虚拟文件的时候会导致文件覆盖
+<pre><code>var DEV_DIR = "~/dev/"; // 开发目录和虚拟文件目录尽量不要同一个目录，生成虚拟文件的时候会导致文件覆盖
 var list = {
-    "js/mtsy/": {
+    "js/": {
         "libs": {
-            'sea.js': [   // 这里定义一个 jt.config.base下 jt/mtsy/libs/sea.js文件，该文件由下面的数组内的文件合并而成
-                MEITUSIYU_DIR + 'libs/sea.js'
+            'sea.js': [   // 这里定义一个 jt.config.base下 jt/libs/sea.js文件，该文件由下面的数组内的文件合并而成
+                DEV_DIR + 'libs/sea.js'
             ]
     }
 };
@@ -190,8 +185,8 @@ jt.setConfig('fs.list', list);
 <p>上面的配置会格式化成</p>
 
 <pre><code>jt.config.fs.list = {
-    "[jt.config.base]/jt/mtsy/libs/sea.js": [
-        MEITUSIYU_DIR + 'libs/sea.js'
+    "[jt.config.base]/jt/libs/sea.js": [
+        DEV_DIR + 'libs/sea.js'
     ]
 }
 </code></pre>
@@ -199,12 +194,12 @@ jt.setConfig('fs.list', list);
 <p>2、processor定义</p>
 
 <pre><code>var list = {
-    "js/mtsy/": {
+    "js/": {
         "libs": {
             'jquery.js': [
                 {
                     processor: ['jt-seajs'],   // processor可以定义多个处理器，按定义先后处理
-                    file: MEITUSIYU_DIR + 'libs/jquery.js', // file指文件路径，允许传入本地文件和虚拟文件
+                    file: DEV_DIR + 'libs/jquery.js', // file指文件路径，允许传入本地文件和虚拟文件
                     'jt-seajs': {  // 作为参数传递给jt-seajs
                         name: 'jquery'
                     }
@@ -232,7 +227,7 @@ jt.setConfig('fs.list', list);
 <p>3、虚拟文件的引用</p>
 
 <pre><code>var list = {
-    "js/mtsy/": {
+    "js/": {
         "pc": {
             "page.index.js": [
                 './module.share.js', // 引用虚拟文件
@@ -240,7 +235,7 @@ jt.setConfig('fs.list', list);
                 './module.dialog.js', // 引用虚拟文件
                 {
                     processor: 'jt-seajs',
-                    file: MEITUSIYU_DIR + 'pc/page/index/index.js',
+                    file: DEV_DIR + 'pc/page/index/index.js',
                     'jt-seajs': {
                         depend: ['jquery', 'tmt', 'module.share'],
                         name: 'page.index'
@@ -250,7 +245,7 @@ jt.setConfig('fs.list', list);
             "module.share.js": [
                 {
                     processor: ['jt-cssminify', 'jt-seajs'],
-                    file: MEITUSIYU_DIR + 'pc/module/share.css',
+                    file: DEV_DIR + 'pc/module/share.css',
                     'jt-seajs': {
                         type: 'string',
                         name: 'module.share.css'
@@ -259,7 +254,7 @@ jt.setConfig('fs.list', list);
                 {
                     processor: ['jt-htmlminify', 'jt-seajs'],
                     file: [
-                        MEITUSIYU_DIR + 'pc/module/share.html'
+                        DEV_DIR + 'pc/module/share.html'
                     ],
                     'jt-seajs': {
                         type: 'string',
@@ -268,7 +263,7 @@ jt.setConfig('fs.list', list);
                 },
                 {
                     processor: 'jt-seajs',
-                    file: MEITUSIYU_DIR + 'pc/module/share.js',
+                    file: DEV_DIR + 'pc/module/share.js',
                     'jt-seajs': {
                         type: 'function',
                         depend: ['jquery'],
