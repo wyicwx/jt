@@ -31,150 +31,353 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h2>
-<a name="%E4%BB%80%E4%B9%88%E6%98%AFjt" class="anchor" href="#%E4%BB%80%E4%B9%88%E6%98%AFjt"><span class="octicon octicon-link"></span></a>什么是JT？</h2>
+        <h1>
+<a name="%E5%89%8D%E7%AB%AF%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B7%A5%E5%85%B7-jt" class="anchor" href="#%E5%89%8D%E7%AB%AF%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B7%A5%E5%85%B7-jt"><span class="octicon octicon-link"></span></a>前端自动化工具 JT</h1>
 
-<hr><p>为web开发者提供开发javascript辅助及半自动化工具集。</p>
+<p>jt底层是一套虚拟文件系统，具有非常强大的扩展能力</p>
 
-<p>具有以下功能与特性：</p>
+<p>通过processor的方式来扩展底层虚拟文件系统对文件的处理能力</p>
 
-<ul>
-<li>代理服务</li>
-<li>项目构建</li>
-<li>极限压缩</li>
-<li>插件支持</li>
-</ul><h2>
-<a name="%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8" class="anchor" href="#%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8"><span class="octicon octicon-link"></span></a>快速入门</h2>
+<p>通过jt提供的接口来支持上层扩展的开发</p>
 
-<hr><p><em>安装</em></p>
+<p>github 地址: <a href="https://github.com/wyicwx/jt">https://github.com/wyicwx/jt</a></p>
 
-<p>jt已经发布在npm上，通过以下命令进行安装</p>
+<p>npm 地址: <a href="https://www.npmjs.org/package/jt-cli">https://www.npmjs.org/package/jt-cli</a></p>
 
-<blockquote>
-<p>npm install -g jt-cli</p>
-</blockquote>
+<h2>
+<a name="%E5%AE%89%E8%A3%85" class="anchor" href="#%E5%AE%89%E8%A3%85"><span class="octicon octicon-link"></span></a>安装</h2>
 
-<h6>
-<a name="%E6%B3%A8%E6%84%8F%E8%AF%B7%E4%B8%80%E5%AE%9A%E5%8A%A0%E4%B8%8A-g%E5%8F%82%E6%95%B0" class="anchor" href="#%E6%B3%A8%E6%84%8F%E8%AF%B7%E4%B8%80%E5%AE%9A%E5%8A%A0%E4%B8%8A-g%E5%8F%82%E6%95%B0"><span class="octicon octicon-link"></span></a>注意：请一定加上-g参数</h6>
+<p>1、必须要有node环境和node包管理npm，最新版本的node自带了npm</p>
 
-<p>安装后允许你在任意目录下运行JT</p>
+<p>由于jt使用了流的模式来构建底层，不推荐推荐安装0.80以下版本的node</p>
 
-<p>JT如何工作？</p>
+<p>使用下面的命令查看node版本</p>
 
-<p><em>初始化配置文件</em></p>
-
-<p>JT的运行依赖于相应的文件内的配置规则，在运行JT之前需要编写好配置文件，JT已经提供了一套默认配置，可以方便快捷地生成。</p>
-
-<blockquote>
-<p>jt init</p>
-</blockquote>
-
-<p>建议在项目文件夹根目录下执行。JT执行时按当前目录向上逐级查找配置文件，在项目根目录生成配置文件可以更加方便JT查找配置文件。</p>
-
-<p>命令执行后会在当前路径下生成.jt文件夹</p>
-
-<pre><code>├──┬.jt
-   ├────config.js
-   ├────fs.js
-   ├────project.js
-   └────server.js
+<pre><code>$ node -v
+v0.10.25
 </code></pre>
 
-<p><em>友好命令行界面</em></p>
+<p>2、使用npm install安装jt</p>
 
-<p>执行 jt -h 查看相关帮助</p>
+<pre><code>$ npm install -g jt-cli
+</code></pre>
 
-<pre><code>  Usage: jt [options] &lt;arguments&gt;
+<p><em>请一定加上-g参数，jt的名称为jt-cli请不要打错</em></p>
 
-  Command:
+<p>PS: 开发机如何使用npm？ 参考OA文章 <a href="http://km.oa.com/group/502/articles/show/167873">内部 Node.JS NPM 镜像使用方法</a></p>
 
-    info                                    show jt config infomation
-    server                                  start server
+<p>3、生成配置文件</p>
 
-  Option:
+<p>cd 到项目根目录下,执行下面命令</p>
 
-    -b, --build project [project2] ...      build project
-    -l, --list [project]                    show project's list
-    -c, --compress [file]...                js/css file minify compress
-    -m, --match port url                    match url to server rule
+<pre><code>$ jt init
+</code></pre>
+
+<p>该命令会在执行命令的目录下生成一个目录.jt</p>
+
+<p>4、通过命令运行jt</p>
+
+<pre><code>$ jt 
+</code></pre>
+
+<p>执行后可以看到下面的输出界面</p>
+
+<pre><code>Usage: jt &lt;command&gt;
+
+Command:
+
+  info                          show jt config infomation     
+  build                         build project                 
+  compress                      js/css file minify compress   
+  server                        start proxy server            
+
+Option:
+
+  -v,--version  
 </code></pre>
 
 <h2>
-<a name="%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6" class="anchor" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="octicon octicon-link"></span></a>配置文件</h2>
+<a name="%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84" class="anchor" href="#%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="octicon octicon-link"></span></a>目录结构</h2>
 
-<hr><p><em>config.js</em></p>
+<p>为了和开发目录的代码区分开来，jt使用单独文件夹来包括所有配置文件和扩展包</p>
 
-<pre><code>var config = {
-    base: '../', 
+<pre><code>.jt
+ - index.js        // 配置文件入口，配置文件过大可以在内部require其他文件来拆分
+ - package.json    // 包文件，目前用处就是来指引jt引用index.js，保留用，后期会和npm搭配
+ - node_module/    // node包文件，自己开发的模块也存放在这里
+
+
+
+</code></pre>
+
+<h2>
+<a name="%E6%96%87%E4%BB%B6%E9%85%8D%E7%BD%AE" class="anchor" href="#%E6%96%87%E4%BB%B6%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>文件配置</h2>
+
+<p>一般配置卸载index.js内，因为index.js也是js文件，可以通过require函数来引入多个js文件，从而拆分配置文件</p>
+
+<pre><code>jt.setConfig('base', '../');
+</code></pre>
+
+<p>setConfig函数会在jt.config上定义相应的属性，但不推荐直接在jt.config上定义，setConfig会覆盖jt.config默认的值</p>
+
+<p>下面是默认的jt.config属性</p>
+
+<pre><code>jt.config = {
+    base: null, // 项目根目录，支持绝对路径和相对路径，相对路径相对于.jt的目录
     fs: {
-        list: require('./fs.js'),
-        ignorePath: []
+        list: {},   // 虚拟文件列表，在这里定义虚拟文件的配置
+        ignorePath: [] // 忽略目录，同base支持绝对和相对路径
     },
-    project: require('./project.js'),
-    server: require('./server.js'),
-    compressor: {
-        gzip: true
-    }
+    project: {},  // project，对虚拟文件的一个归类的概念
+    server: {
+        slowSpeedSimulate: {
+            enable: false,
+            highWaterMark: 100,
+            interval: 10,
+        },
+        port: 8080,
+        description: 'default',
+        list: {
+            'http://([^\\/]+)/(.*)js($)': { // 代理匹配规则
+                respond: [
+                    '$2.js'
+                ]
+            }
+        },
+        hosts: {} // 自定义host
+    },
+    compressor: {   // 压缩器，这里定义了默认的压缩方式，定义多个压缩器，在压缩的时候会全部使用并选择最高的压缩率输出
+        'js': {    // 对应js后缀的文件压缩
+            'jsmin': 'jt-jsmin',   // 压缩器
+            'uglify': 'jt-uglify'
+        },
+        'css': { // 对应css后缀的文件压缩
+            'minicss': 'jt-cssminify'
+        }
+    },
+    plugins: []
 };
 </code></pre>
 
-<p>base 指定文件夹路径，配置文件内所有相对路径都以该目录作为相对目录。这里推荐指定存放静态文件的目录为base路径。</p>
+<ul>
+<li>jt.config.fs.list配置</li>
+</ul><p>通过jt.setConfig来设置fs.list</p>
 
-<p>compressor.gzip 压缩器在压缩文件时是否按gzip格式压缩判断</p>
+<pre><code>var list = {};
+jt.setConfig('fs.list', list);
+</code></pre>
 
-<p><em>fs.js</em></p>
+<p>下面按美图私语的配置举例</p>
 
-<pre><code>var fileSystem = {
-    'folder': {
-        'file': [
-            'file', {
-                'compressor': 'string',
-                'value': 'string'
+<p>1、单个虚拟文件的定义</p>
+
+<pre><code>var MEITUSIYU_DIR = "~/template/source/Meitusiyu/"; // 开发目录和虚拟文件目录尽量不要同一个目录，生成虚拟文件的时候会导致文件覆盖
+var list = {
+    "js/mtsy/": {
+        "libs": {
+            'sea.js': [   // 这里定义一个 jt.config.base下 jt/mtsy/libs/sea.js文件，该文件由下面的数组内的文件合并而成
+                MEITUSIYU_DIR + 'libs/sea.js'
+            ]
+    }
+};
+jt.setConfig('fs.list', list);
+</code></pre>
+
+<p>jt.config.fs.list下定义的路径都会被自动格式化成完整路径</p>
+
+<p>jt格式化路径会通过判断,key值是否为数组来判断路径是否格式完毕</p>
+
+<p>上面的配置会格式化成</p>
+
+<pre><code>jt.config.fs.list = {
+    "[jt.config.base]/jt/mtsy/libs/sea.js": [
+        MEITUSIYU_DIR + 'libs/sea.js'
+    ]
+}
+</code></pre>
+
+<p>2、processor定义</p>
+
+<pre><code>var list = {
+    "js/mtsy/": {
+        "libs": {
+            'jquery.js': [
+                {
+                    processor: ['jt-seajs'],   // processor可以定义多个处理器，按定义先后处理
+                    file: MEITUSIYU_DIR + 'libs/jquery.js', // file指文件路径，允许传入本地文件和虚拟文件
+                    'jt-seajs': {  // 作为参数传递给jt-seajs
+                        name: 'jquery'
+                    }
+                }
+            ]
+        }
+    }
+};
+jt.setConfig('fs.list', list);
+</code></pre>
+
+<p>也可以通过传递value的方式传递值</p>
+
+<pre><code>{
+    processor: ['jt-seajs'],
+    value: 'alert(321)',
+    'jt-seajs': {
+        name: 'jquery'
+    }
+}
+</code></pre>
+
+<p>在file和value同时存在的情况下，file优先级比value高</p>
+
+<p>3、虚拟文件的引用</p>
+
+<pre><code>var list = {
+    "js/mtsy/": {
+        "pc": {
+            "page.index.js": [
+                './module.share.js', // 引用虚拟文件
+                './module.slider.js', // 引用虚拟文件
+                './module.dialog.js', // 引用虚拟文件
+                {
+                    processor: 'jt-seajs',
+                    file: MEITUSIYU_DIR + 'pc/page/index/index.js',
+                    'jt-seajs': {
+                        depend: ['jquery', 'tmt', 'module.share'],
+                        name: 'page.index'
+                    }
+                }
+            ],
+            "module.share.js": [
+                {
+                    processor: ['jt-cssminify', 'jt-seajs'],
+                    file: MEITUSIYU_DIR + 'pc/module/share.css',
+                    'jt-seajs': {
+                        type: 'string',
+                        name: 'module.share.css'
+                    }
+                },
+                {
+                    processor: ['jt-htmlminify', 'jt-seajs'],
+                    file: [
+                        MEITUSIYU_DIR + 'pc/module/share.html'
+                    ],
+                    'jt-seajs': {
+                        type: 'string',
+                        name: 'module.share.html'
+                    }
+                },
+                {
+                    processor: 'jt-seajs',
+                    file: MEITUSIYU_DIR + 'pc/module/share.js',
+                    'jt-seajs': {
+                        type: 'function',
+                        depend: ['jquery'],
+                        name: 'module.share'
+                    }
+                }
+            ],
+            "module.dialog.js": [
+                // 配置
+            ],
+            "module.slider.js": [
+                // 配置
+            ]
+        }
+    }
+}
+</code></pre>
+
+<p>可以通过使用相对路径来引用虚拟文件</p>
+
+<p><em>PS:关于jt.fs.list中路径的说明</em></p>
+
+<p>绝对路径</p>
+
+<pre><code>/   相对于本地文件系统的路径
+</code></pre>
+
+<p>相对路径 </p>
+
+<pre><code>../ ./   相对当前虚拟文件的路径
+
+~/   相对jt.base路径
+</code></pre>
+
+<p>windows同学也必须使用/路径分隔符，而不是使用\</p>
+
+<ul>
+<li>jt.config.server.list的配置</li>
+</ul><pre><code>var list = {
+    'http://([^\\/]+)/(.*)js($)': { // 用括号包括起来的部分使用js的正则语法，注意\要用\\代替
+        respond: [
+            '$2.js', // $2指代第二个括号匹配的字符，这里的路径同processor的路径处理
+            {       // 这里允许合并文件 
+                value: 'if(window.console){window.console("map to local file")}'
             }
         ]
     }
 };
+jt.setConfig('server.list', list);
 </code></pre>
-
-<p><em>project.js</em></p>
-
-<pre><code>var project = {
-    'project': {
-        'description': 'project\' description',
-        'files': [
-            'fileA',
-            'fileB'
-        ]
-    }
-};
-</code></pre>
-
-<p><em>server.js</em></p>
-
-<pre><code>var server = {
-    slowSpeedSimulate: {
-        enable: false,
-        highWaterMark: 100,
-        interval: 10,
-    },
-    port: 8080,
-    description: 'default',
-    list: {},
-    hosts: {}
-};
-</code></pre>
-
-<p>配置匹配</p>
 
 <h2>
-<a name="%E6%89%A9%E5%B1%95%E5%BC%80%E5%8F%91" class="anchor" href="#%E6%89%A9%E5%B1%95%E5%BC%80%E5%8F%91"><span class="octicon octicon-link"></span></a>扩展开发</h2>
+<a name="%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4" class="anchor" href="#%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4"><span class="octicon octicon-link"></span></a>基础命令</h2>
 
-<hr><p>所提供的api？</p>
+<p>参看</p>
+
+<ul>
+<li>build</li>
+</ul><pre><code>$ jt build
+</code></pre>
+
+<ul>
+<li>compress</li>
+</ul><pre><code>$ jt compress
+</code></pre>
+
+<ul>
+<li>server</li>
+</ul><pre><code>$ jt server 
+</code></pre>
+
+<p>启动代理</p>
+
+<pre><code>$ jt server start
+</code></pre>
+
+<h2>
+<a name="%E5%8F%AF%E7%94%A8process%E6%8F%92%E4%BB%B6" class="anchor" href="#%E5%8F%AF%E7%94%A8process%E6%8F%92%E4%BB%B6"><span class="octicon octicon-link"></span></a>可用process插件</h2>
+
+<p><a href="https://github.com/wyicwx/jt-include">jt-include</a></p>
+
+<p><a href="https://github.com/wyicwx/jt-htmlminify">jt-htmlminify</a></p>
+
+<p><a href="https://github.com/wyicwx/jt-seajs">jt-seajs</a></p>
+
+<p><a href="https://github.com/wyicwx/jt-splithtml">jt-splithtml</a></p>
+
+<p><a href="https://github.com/wyicwx/jt-uglify">jt-uglify</a></p>
+
+<p><a href="https://github.com/wyicwx/jt-less">jt-less</a></p>
+
+<h2>
+<a name="%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91" class="anchor" href="#%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91"><span class="octicon octicon-link"></span></a>插件开发</h2>
+
+<ul>
+<li>命令行接口开发</li>
+</ul><p><a href="https://github.com/wyicwx/cmd-interface">cmd-interface</a></p>
+
+<p>to be continued!</p>
+
+<h2>
+<a name="%E6%B5%81%E7%9F%A5%E8%AF%86" class="anchor" href="#%E6%B5%81%E7%9F%A5%E8%AF%86"><span class="octicon octicon-link"></span></a>流知识</h2>
+
+<p>to be continued!</p>
 
 <h2>
 <a name="%E5%85%B3%E4%BA%8E" class="anchor" href="#%E5%85%B3%E4%BA%8E"><span class="octicon octicon-link"></span></a>关于</h2>
 
-<hr><p>开发JT的初衷只是为了弥补os x下没有fiddler的autoresponder功能的缺陷，原先只是一个简单的代理程序，但随着应用面不断的扩大，需要应付的场景越来越复杂，于是有了这个项目。</p>
+<p>开发JT的初衷只是为了弥补os x下没有fiddler的autoresponder功能的缺陷，原先只是一个简单的代理程序，但随着应用面不断的扩大，需要应付的场景越来越复杂，于是有了这个项目。</p>
       </section>
     </div>
 
