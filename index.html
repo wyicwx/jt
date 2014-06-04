@@ -1,43 +1,33 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
     <title>Jt by wyicwx</title>
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="javascripts/respond.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <!--[if lt IE 8]>
-    <link rel="stylesheet" href="stylesheets/ie.css">
-    <![endif]-->
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
   </head>
+
   <body>
-      <div id="header">
-        <nav>
-          <li class="fork"><a href="https://github.com/wyicwx/jt">View On GitHub</a></li>
-          <li class="downloads"><a href="https://github.com/wyicwx/jt/zipball/master">ZIP</a></li>
-          <li class="downloads"><a href="https://github.com/wyicwx/jt/tarball/master">TAR</a></li>
-          <li class="title">DOWNLOADS</li>
-        </nav>
-      </div><!-- end header -->
 
-    <div class="wrapper">
+    <header>
+      <div class="container">
+        <h1>Jt</h1>
+        <h2>辅助开发及半自动化工具集</h2>
 
-      <section>
-        <div id="title">
-          <h1>Jt</h1>
-          <p>辅助开发及半自动化工具集</p>
-          <hr>
-          <span class="credits left">Project maintained by <a href="https://github.com/wyicwx">wyicwx</a></span>
-          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
-        </div>
+        <section id="downloads">
+          <a href="https://github.com/wyicwx/jt/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/wyicwx/jt/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/wyicwx/jt" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
 
+    <div class="container">
+      <section id="main_content">
         <h1>
 <a name="%E5%89%8D%E7%AB%AF%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B7%A5%E5%85%B7-jt" class="anchor" href="#%E5%89%8D%E7%AB%AF%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B7%A5%E5%85%B7-jt"><span class="octicon octicon-link"></span></a>前端自动化工具 JT</h1>
 
@@ -310,7 +300,7 @@ jt.setConfig('fs.list', list);
 <ul>
 <li>jt.config.server.list的配置</li>
 </ul><pre><code>var list = {
-    'http://([^\\/]+)/(.*)js($)': { // 用括号包括起来的部分使用js的正则语法，注意\要用\\代替
+    'http://([^\\/]+)/(.*).js($)': { // 用括号包括起来的部分使用js的正则语法，注意\要用\\代替
         respond: [
             '$2.js', // $2指代第二个括号匹配的字符，这里的路径同processor的路径处理
             {       // 这里允许合并文件 
@@ -381,9 +371,8 @@ jt.setConfig('server.list', list);
 
 <p>开发JT的初衷只是为了弥补os x下没有fiddler的autoresponder功能的缺陷，原先只是一个简单的代理程序，但随着应用面不断的扩大，需要应付的场景越来越复杂，于是有了这个项目。</p>
       </section>
-
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+
     
   </body>
 </html>
