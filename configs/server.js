@@ -10,10 +10,4 @@ var server = {
 	hosts: {}
 };
 
-server.list['http://([^\\/]+)/(.*)js($)'] = {
-	respond: [
-		'$2.js'
-	]
-};
-
 module.exports = server;
