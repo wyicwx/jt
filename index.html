@@ -129,13 +129,7 @@ Option:
         },
         port: 8080,
         description: 'default',
-        list: {
-            'http://([^\\/]+)/(.*)js($)': { // 代理匹配规则
-                respond: [
-                    '$2.js'
-                ]
-            }
-        },
+        list: {},
         hosts: {} // 自定义host
     },
     compressor: {   // 压缩器，这里定义了默认的压缩方式，定义多个压缩器，在压缩的时候会全部使用并选择最高的压缩率输出
@@ -304,7 +298,7 @@ jt.setConfig('fs.list', list);
         respond: [
             '$2.js', // $2指代第二个括号匹配的字符，这里的路径同processor的路径处理
             {       // 这里允许合并文件 
-                value: 'if(window.console){window.console("map to local file")}'
+                value: ';if(window.console){window.console("map to local file")}'
             }
         ]
     }
