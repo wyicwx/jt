@@ -134,14 +134,37 @@ var projectConfig = {
 	}
 };
 var list = {
-	'http://github.com/wyicwx/jt': {
-		
-	}
+	'http://github.com/wyicwx/jt/headers': {
+		headers: {
+			Customadd: 'add',
+			Server: 'testServer'
+		}
+	},
+	'http://github.com/wyicwx/jt/statusCode': {
+		statusCode: 404
+	},
+	'http://github.com/wyicwx/jt/file/(.*)': {
+		respond: [{
+			file: "$1"
+		}]
+	},
+	'http://github.com/wyicwx/jt/value/(.*)': {
+		respond: [{
+			value: "$1"
+		}]
+	},
+	'http://github.com/wyicwx/jt/(.*)': {
+		respond: '$1'
+	},
+	'http://github.com/wyicwx/jt($)': {
+		respond: ['fs/a.js']
+	},
 };
 jt.setConfig('base', path.resolve(__dirname));
 jt.setConfig('fs', fsConfig);
 jt.setConfig('project', projectConfig);
-jt.setConfig('test.get.config', 1)
+jt.setConfig('test.get.config', 1);
+jt.setConfig('server.list', list);
 jt.init();
 var through = require('through2');
 
