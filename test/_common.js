@@ -133,6 +133,11 @@ var projectConfig = {
 		files: ['fs/a.js']
 	}
 };
+var list = {
+	'http://github.com/wyicwx/jt': {
+		
+	}
+};
 jt.setConfig('base', path.resolve(__dirname));
 jt.setConfig('fs', fsConfig);
 jt.setConfig('project', projectConfig);
