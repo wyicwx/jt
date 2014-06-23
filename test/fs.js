@@ -522,7 +522,7 @@ describe('jt.fs', function() {
 				}
 				return through();
 			});
-			
+
 			jt.fs.createReadCombineStream([{
 				processor: '___TEST_PROCESSOR_DEFINE',
 				file: '~/fs/c.js',
@@ -641,7 +641,7 @@ describe('jt.fs', function() {
 				processor: 'optionTest',
 				file: '~/build/*',
 				optionTest: function() {
-					return {file: this.file}
+					return {file: this.file};
 				}
 			});
 		});
