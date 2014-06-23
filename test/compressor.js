@@ -1,14 +1,13 @@
+'use strict';
 var assert = require('assert'),
-	fs = require('fs'),
-	path = require('path');
+	fs = require('fs');
 
 require('./_common.js');
-var compressor = jt.compressor;
 
 describe('jt.compressor', function() {
 
 	it('Minifyjs正常运行', function() {
-		jt.fs.readFile('processor/Minifyjs.js', function(data) {});
+		jt.fs.readFile('processor/Minifyjs.js', function() {});
 	});
 
 
@@ -89,7 +88,7 @@ describe('jt.compressor', function() {
 		var file1 = jt.fs.pathResolve('fs/buildF1.min.js');
 		var file2 = jt.fs.pathResolve('fs/buildF2.min.js');
 		var file3 = jt.fs.pathResolve('fs/buildF3.min.js');
-		var has = true;
+
 		[file1, file2, file3].forEach(function(file) {
 			if(fs.existsSync(file)) {
 				fs.unlinkSync(file);

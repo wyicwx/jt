@@ -1,112 +1,112 @@
-var assert = require('assert'),
-	path = require('path');
+'use strict';
+var path = require('path');
 
 var jt = require('../lib/kernel.js');
 jt.configDir = __dirname;
 
 var fsConfig = {
 	list : {
-		"fs/": {
-			"ignore/": {
-				"ignoreFile.js": [
-					"../a.js"
+		'fs/': {
+			'ignore/': {
+				'ignoreFile.js': [
+					'../a.js'
 				],
-				"a.js": [
-					"../a.js"
+				'a.js': [
+					'../a.js'
 				]
 			},
-			"compressor": {
-				"a.css": [{
-					"processor": "compressCss",
-					"file": "fs/a.css"
+			'compressor': {
+				'a.css': [{
+					'processor': 'compressCss',
+					'file': 'fs/a.css'
 				}],
-				"a.js": [{
-					"processor": "compressJs",
-					"file": "fs/a.js"
+				'a.js': [{
+					'processor': 'compressJs',
+					'file': 'fs/a.js'
 				}],
-				"a.html": [{
-					"processor": "compressHtml",
-					"file": "fs/a.html"
+				'a.html': [{
+					'processor': 'compressHtml',
+					'file': 'fs/a.html'
 				}]
 			},
-			"c.js": [
-				"a.js",
-				"b.js"
+			'c.js': [
+				'a.js',
+				'b.js'
 			],
-			"d.js": "d.js",
-			"e.js": "a.js",
-			"f.js": [{
-				"value": "string"
+			'd.js': 'd.js',
+			'e.js': 'a.js',
+			'f.js': [{
+				'value': 'string'
 			}],
-			"g.js": [
+			'g.js': [
 				'c.js',
 				'f.js'
 			],
-			"h.js": [{
+			'h.js': [{
 				'processor': 'notExist'
 			}],
-			"i.js": [{
-				"value": "string"
+			'i.js': [{
+				'value': 'string'
 			}],
-			"j.js": [{
-				"file": "f.js"
+			'j.js': [{
+				'file': 'f.js'
 			}],
-			"k.js": [{
-				"value": "0"
+			'k.js': [{
+				'value': '0'
 			}],
-			"l.js": [{
-				"file": "j.js"
+			'l.js': [{
+				'file': 'j.js'
 			}],
-			"m.js": [{
-				"file": "j.js"
+			'm.js': [{
+				'file': 'j.js'
 			}],
-			"buildF1.js": [{
-				"file": "j.js"
+			'buildF1.js': [{
+				'file': 'j.js'
 			}],
-			"buildF2.js": [{
-				"file": "j.js"
+			'buildF2.js': [{
+				'file': 'j.js'
 			}],
-			"buildF3.js": [{
-				"file": "j.js"
+			'buildF3.js': [{
+				'file': 'j.js'
 			}],
-			"testForSearch.js": "a.js",
-			"reTestForSearch.js": "a.js",
-			"toRemove.js": "a.js",
-			"through.js": [{
-				"processor": ['through'],
-				"value": "test"
+			'testForSearch.js': 'a.js',
+			'reTestForSearch.js': 'a.js',
+			'toRemove.js': 'a.js',
+			'through.js': [{
+				'processor': ['through'],
+				'value': 'test'
 			}]
 		},
-		"processor/": {
-			"notFileValue.js": [{
-				"processor": "string"
+		'processor/': {
+			'notFileValue.js': [{
+				'processor': 'string'
 			}],
-			"notProcessor.js": [{
-				"processor": "123123",
-				"value": "test"
+			'notProcessor.js': [{
+				'processor': '123123',
+				'value': 'test'
 			}],
-			"Minifyjs.js": [{
-				"processor": "Minifyjs",
-				"value": "test"
+			'Minifyjs.js': [{
+				'processor': 'Minifyjs',
+				'value': 'test'
 			}]
 		},
-		"build": {
-			"one.js": [{value: "1"}],
-			"two.js": [{value: "2"}],
-			"three": [{value: "3"}]
+		'build': {
+			'one.js': [{value: '1'}],
+			'two.js': [{value: '2'}],
+			'three': [{value: '3'}]
 		}
 	},
 	ignorePath: [
-		"fs/ignore/*"
+		'fs/ignore/*'
 	]
 };
 var projectConfig = {
 	'Aproject': {
 		files: [
-			"fs/a.js",
-			"fs/b.js",
-			"fs/c.js",
-			"fs/null.js"
+			'fs/a.js',
+			'fs/b.js',
+			'fs/c.js',
+			'fs/null.js'
 		]
 	},
 	'Bproject': {
@@ -115,15 +115,15 @@ var projectConfig = {
 	},
 	'Cproject': {
 		files: [
-			"fs/j.js",
-			"fs/i.js",
-			"fs/k.js",
-			"fs/null.js"
+			'fs/j.js',
+			'fs/i.js',
+			'fs/k.js',
+			'fs/null.js'
 		]
 	},
 	'globProject': {
 		files: [
-			"build/*"
+			'build/*'
 		]
 	},
 	'stringProject': {
@@ -145,12 +145,12 @@ var list = {
 	},
 	'http://github.com/wyicwx/jt/file/(.*)': {
 		respond: [{
-			file: "$1"
+			file: '$1'
 		}]
 	},
 	'http://github.com/wyicwx/jt/value/(.*)': {
 		respond: [{
-			value: "$1"
+			value: '$1'
 		}]
 	},
 	'http://github.com/wyicwx/jt/(.*)': {
@@ -168,6 +168,6 @@ jt.setConfig('server.list', list);
 jt.init();
 var through = require('through2');
 
-jt.fs.assign('string', function(opt) {
+jt.fs.assign('string', function() {
 	return through();
 });

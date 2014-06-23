@@ -1,6 +1,6 @@
+'use strict';
 var assert = require('assert'),
-	fs = require('fs'),
-	path = require('path');
+	fs = require('fs');
 
 require('./_common.js');
 var builder = jt.builder;
@@ -18,7 +18,7 @@ describe('jt.builder', function() {
 
 		it('空项目返回null', function() {
 			var files = builder.getFilesByProject('emptyProject');
-			if(files == null) {
+			if(files === null) {
 				assert.ok(true);
 			} else {
 				assert.ok(false);
@@ -211,7 +211,7 @@ describe('jt.builder', function() {
 
 		it('build -f显示help没有报错', function() {
 			jt.commander.run(['build', '-f']);
-		})
+		});
 
 		it('build -f 多文件', function(done) {
 			jt.commander.run(['build', '-f', 'fs/buildF1.js', 'fs/buildF2.js', 'fs/buildF3.js', 'fs/buildF4.js']);
@@ -246,7 +246,8 @@ describe('jt.builder', function() {
 		it('build -f 无选择，有提示，无报错', function() {
 			jt.commander.run(['build', '-f', 'fs/buildF1.js', 'fs/buildF2.js', 'fs/buildF3.js', 'fs/buildF4.js']);
 			process.stdin.emit('data', 'ddd\r\n');
-		})
+		});
+		
 		it('build localProject', function() {
 			jt.commander.run(['build', 'localFileProject']);
 		});

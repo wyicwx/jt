@@ -1,3 +1,4 @@
+'use strict';
 var assert = require('assert');
 var http = require('http');
 
@@ -16,8 +17,9 @@ function getContent(callback) {
 
 			callback(data);
 		});
-	}
+	};
 }
+
 describe('server', function() {
 	it('http头正确返回无cache状态', function(done) {
 		http.request({
@@ -132,11 +134,35 @@ describe('server', function() {
 		}).end();
 	});
 
+	it('转发请求', function(done) {
+		http.request({
+			hostname: 'localhost',
+			port: 8080,
+			path: 'http://www.qq.com',
+			agent: false,
+			headers: {
+				'Proxy-Connection': 'connect'
+			}
+		}, getContent(function(buffer) {
+			if(buffer.toString().indexOf('qq.com') != -1) {
+				done();
+			} else {
+				done(false);
+			}
+		})).on('error', function() {
+			done(false);
+		}).end();
+	});
+
 	it('help', function() {
 		jt.commander.run(['server']);
 	});
 
 	it('urlChecker', function() {
 		jt.commander.run(['server', '--url=http://github.com/wyicwx/jt/value/success']);
-	})
+	});
+
+	it('重复启动server', function() {
+		jt.commander.run(['server', 'start']);
+	});
 });

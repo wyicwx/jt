@@ -1,3 +1,4 @@
+'use strict';
 var assert = require('assert'),
 	fs = require('fs'),
 	path = require('path');
@@ -11,7 +12,7 @@ describe('jt.fs', function() {
 	describe('#预处理', function() {
 		it('jt.config.fs.list需要格式化成完整路径', function() {
 			['c.js', 'd.js', 'e.js', 'f.js', 'g.js', 'h.js', 'i.js'].forEach(function(name) {
-				if(path.join(jt.config.base, "fs/"+name) in jt.config.fs.list) {
+				if(path.join(jt.config.base, 'fs/'+name) in jt.config.fs.list) {
 					assert.ok(true);
 				} else {
 					assert.ok(false);
@@ -95,7 +96,7 @@ describe('jt.fs', function() {
 
 		it('process内不存在file或者value时应该报错', function() {
 			assert.throws(function() {
-				var stream = jt.fs.createReadStream('fs/h.js');
+				jt.fs.createReadStream('fs/h.js');
 			});
 		});
 	});
@@ -131,7 +132,7 @@ describe('jt.fs', function() {
 
 			stream.on('end', function() {
 				chunk = Buffer.concat(chunk);
-				var ret = jt.fs.readFile('fs/c.js', function(data) {
+				jt.fs.readFile('fs/c.js', function(data) {
 					if(chunk.toString() == data.toString()) {
 						done();
 					} else {
@@ -153,12 +154,11 @@ describe('jt.fs', function() {
 
 		it('读取流文件', function(done) {
 			var stream = jt.fs.createReadStream('fs/c.js');
-			var chunk = [];
 
 			jt.fs.readFile(stream, function(buffer) {
 				jt.fs.readFile('fs/c.js', function(buffer1) {
 					if(buffer.toString() == buffer1.toString()) {
-						done()
+						done();
 					} else {
 						done(false);
 					}
@@ -273,7 +273,7 @@ describe('jt.fs', function() {
 		it('搜索回调只会触发一次', function(done) {
 			var fired = false;
 
-			jt.fs.search('**/c.js', function(data) {
+			jt.fs.search('**/c.js', function() {
 				if(fired) {
 					done(false);
 				} else {
@@ -513,7 +513,7 @@ describe('jt.fs', function() {
 
 		it('参数正确传递', function(done) {
 			jt.fs.assign('___TEST_PROCESSOR_DEFINE', function(opt, info) {
-				if(opt.name == 'name' && opt.file == "~/fs/c.js" && opt.dir == jt.config.base) {
+				if(opt.name == 'name' && opt.file == '~/fs/c.js' && opt.dir == jt.config.base) {
 					if(info.dir == jt.config.base) {
 						done();
 					}
@@ -522,12 +522,13 @@ describe('jt.fs', function() {
 				}
 				return through();
 			});
+			
 			jt.fs.createReadCombineStream([{
-				processor: "___TEST_PROCESSOR_DEFINE",
-				file: "~/fs/c.js",
+				processor: '___TEST_PROCESSOR_DEFINE',
+				file: '~/fs/c.js',
 				___TEST_PROCESSOR_DEFINE: {
 					name: 'name',
-					file: "~/fs/c.js",
+					file: '~/fs/c.js',
 					dir: jt.config.base
 				}
 			}]);
@@ -542,12 +543,13 @@ describe('jt.fs', function() {
 				}
 				return through();
 			});
+
 			jt.fs.createReadCombineStream([{
-				processor: "___TEST_PROCESSOR_DEFINE1",
-				file: "~/fs/c.js",
+				processor: '___TEST_PROCESSOR_DEFINE1',
+				file: '~/fs/c.js',
 				___TEST_PROCESSOR_DEFINE1: {
 					name: 'name',
-					file: "~/fs/c.js",
+					file: '~/fs/c.js',
 					dir: jt.config.base
 				}
 			}]);
@@ -562,9 +564,10 @@ describe('jt.fs', function() {
 				}
 				return through();
 			});
+
 			jt.fs.createReadCombineStream([{
-				processor: "___TEST_PROCESSOR_DEFINE2",
-				value: "test"
+				processor: '___TEST_PROCESSOR_DEFINE2',
+				value: 'test'
 			}]);
 		});
 
@@ -622,7 +625,7 @@ describe('jt.fs', function() {
 
 		it('多个参数file格式化为单参数', function(done) {
 			var doned = false;
-			jt.fs.assign('optionTest', function(options, info) {
+			jt.fs.assign('optionTest', function(options) {
 				if(!doned) {
 					doned = true;
 					if(!Array.isArray(options.file)) {
@@ -633,6 +636,7 @@ describe('jt.fs', function() {
 				}
 				return through();
 			});
+
 			jt.fs.readCombineFile({
 				processor: 'optionTest',
 				file: '~/build/*',
