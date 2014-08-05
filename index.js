@@ -1,1 +1,1 @@
-module.exports = require('./lib/kernel.js');
+module.exports = require('./lib/core/kernel.js');

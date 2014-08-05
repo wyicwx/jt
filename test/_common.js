@@ -1,7 +1,7 @@
 'use strict';
 var path = require('path');
 
-var jt = require('../lib/kernel.js');
+var jt = require('../lib/core/kernel.js');
 jt.configDir = __dirname;
 
 var fsConfig = {
