@@ -1,5 +1,6 @@
 'use strict';
 var assert = require('assert'),
+	async = require('async'),
 	fs = require('fs');
 
 require('./_common.js');
@@ -90,22 +91,16 @@ describe('jt.builder', function() {
 
 		it('it return a count stream', function(done) {
 			var ret = builder.buildStream('Aproject');
-			var app = jt.utils.do();
 
-			ret.forEach(function(stream) {
-				app.do(function(done) {
-					stream.resume();
-					
-					stream.on('end', function() {
-						done();
-					});
+			async.map(ret, function(stream, done) {
+				stream.resume();
+				
+				stream.on('end', function() {
+					done();
 				});
-			});
-
-			app.done(function() {
+			}, function() {
 				done();
 			});
-
 		});
 	});
 

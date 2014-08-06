@@ -25,7 +25,7 @@ function checkJtConfig() {
 }
 
 function initConfig() {	
-	jt.utils.mkdir('.jt', './');
+	jt.utils.mkdir('./.jt');
 
 	function cpFile() {
 		['index.js', 'package.json'].forEach(function(file) {
@@ -69,14 +69,22 @@ jt.commander.command({
 var cwd = checkJtConfig();
 if(cwd) {
 	jt.configDir = cwd;
+
 	try {
-		require(jt.configDir);
+		// 尝试读取包信息
 		var pack = require(path.join(jt.configDir, 'package.json'));
-		jt.config.plugins = jt.config.plugins.concat(pack.dependencies || []);
 	} catch(e) {
 		// 兼容老的配置方式
 		jt.config = require(path.join(jt.configDir, 'config.js'));
+		var oldType = true;
 	}
+	
+	if(!oldType) {
+		// 新的包配置方式
+		require(jt.configDir);
+		jt.config.plugins = jt.config.plugins.concat(pack.devDependencies || []);
+	}
+	
 	jt.init();
 	// 执行命令
 	jt.commander.run();

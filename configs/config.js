@@ -1,9 +1,10 @@
 var config = {
-	base: null, 
+	base: null,
 	fs: {
 		list: {},
 		ignorePath: []
 	},
+	task: {},
 	project: {},
 	server: require('./server.js'),
 	compressor: {
