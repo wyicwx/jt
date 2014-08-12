@@ -43,7 +43,7 @@ function initConfig() {
 }
 // init
 jt.commander.command({
-	cmd: 'init', 
+	cmd: 'init',
 	description: 'init jt config file',
 	visible: false,
 	handler: function() {
@@ -82,7 +82,7 @@ if(cwd) {
 	if(!oldType) {
 		// 新的包配置方式
 		require(jt.configDir);
-		jt.config.plugins = jt.config.plugins.concat(pack.devDependencies || []);
+		jt.config.plugins = jt.config.plugins.concat(pack.dependencies || []).concat(pack.devDependencies || []);
 	}
 	
 	jt.init();
