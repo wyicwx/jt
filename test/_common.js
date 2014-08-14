@@ -105,6 +105,10 @@ var fsConfig = {
 			}, {
 				'processor': 'Minifyjs',
 				'file': '../fs/*.css'
+			}, {
+				'file': [
+					'../processor/*.js'
+				]
 			}]
 		}
 	},

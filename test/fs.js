@@ -689,5 +689,17 @@ describe('jt.fs', function() {
 			});
 		});
 
+		it('file为数组指定对应文件', function() {
+			var files = ['notFileValue.js', 'notProcessor.js', 'Minifyjs.js'];
+			files.forEach(function(file) {
+				if(!jt.fs.isVirtual('minify/'+file)) {
+					assert.ok(false);
+				}
+			});
+
+			assert.ok(true);
+		});
+
+		
 	});
 });
