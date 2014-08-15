@@ -657,4 +657,49 @@ describe('jt.fs', function() {
 
 		});
 	});
+
+	describe('文件批处理', function() {
+		it('批处理文件数同源文件相同', function() {
+			var originlFile = jt.fs.searchSync('fs/*.js');
+			var targetFile = jt.fs.searchSync('minify/*.min.js');
+
+			if(originlFile.length == targetFile.length) {
+				assert.ok(true);
+			} else {
+				assert.ok(false);
+			}
+		});
+
+		it('批处理文件正确被processor处理', function(done) {
+			var originlFile = jt.fs.searchSync('fs/*.js');
+			var targetFile = jt.fs.searchSync('minify/*.min.js');
+
+			jt.fs.readCombineFile({
+				processor: 'Minifyjs',
+				file: originlFile[0]
+			}, function(data1) {
+
+				jt.fs.readCombineFile(targetFile[0], function(data2) {
+					if(data1.toString() === data2.toString()) {
+						done()
+					} else {
+						done(false);
+					}
+				});
+			});
+		});
+
+		it('file为数组指定对应文件', function() {
+			var files = ['notFileValue.js', 'notProcessor.js', 'Minifyjs.js'];
+			files.forEach(function(file) {
+				if(!jt.fs.isVirtual('minify/'+file)) {
+					assert.ok(false);
+				}
+			});
+
+			assert.ok(true);
+		});
+
+		
+	});
 });

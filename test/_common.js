@@ -6,7 +6,7 @@ jt.configDir = __dirname;
 
 var fsConfig = {
 	list : {
-		'fs/': {
+		'fs': {
 			'ignore/': {
 				'ignoreFile.js': [
 					'../a.js'
@@ -94,6 +94,22 @@ var fsConfig = {
 			'one.js': [{value: '1'}],
 			'two.js': [{value: '2'}],
 			'three': [{value: '3'}]
+		},
+		'minify': {
+			'*': [{
+				'processor': 'Minifyjs',
+				'file': '../fs/*.js',
+				'rename': function(filename) {
+					return filename.replace(/\.js$/, '.min.js');
+				}
+			}, {
+				'processor': 'Minifyjs',
+				'file': '../fs/*.css'
+			}, {
+				'file': [
+					'../processor/*.js'
+				]
+			}]
 		}
 	},
 	ignorePath: [
