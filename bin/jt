@@ -6,6 +6,7 @@ var jt = module.exports = require('../index.js');
 
 var fs = require('fs');
 var path = require('path');
+var _ = require('underscore');
 
 function checkJtConfig() {
 	var commandDir = path.resolve('./'),
@@ -69,14 +70,19 @@ jt.commander.command({
 var cwd = checkJtConfig();
 if(cwd) {
 	jt.configDir = cwd;
-	try {
+
+	var packagePath = path.join(jt.configDir, 'package.json');
+
+	if(fs.existsSync(packagePath)) {
 		require(jt.configDir);
 		var pack = require(path.join(jt.configDir, 'package.json'));
-		jt.config.plugins = jt.config.plugins.concat(pack.dependencies || []);
-	} catch(e) {
+		jt.config.plugins = jt.config.plugins.concat(_.keys(pack.dependencies || {}) || []).concat(_.keys(pack.devDependencies || {}) || []);
+	} else {
 		// 兼容老的配置方式
+		console.log('    [warnning] swich to early mode!')
 		jt.config = require(path.join(jt.configDir, 'config.js'));
 	}
+
 	jt.init();
 	// 执行命令
 	jt.commander.run();
