@@ -700,6 +700,14 @@ describe('jt.fs', function() {
 			assert.ok(true);
 		});
 
-		
+		it('批处理文件优先级低于指定文件配置,即批处理文件不会覆盖手工配置文件', function(done) {
+			jt.fs.readFile('wildcard/c.js', function(buffer) {
+				if(buffer.toString() == '*') {
+					done();
+				} else {
+					done(false);
+				}
+			});
+		});
 	});
 });

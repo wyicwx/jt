@@ -110,6 +110,14 @@ var fsConfig = {
 					'../processor/*.js'
 				]
 			}]
+		},
+		'wildcard': {
+			'*': [{
+				'file': '../fs/*.js'
+			}],
+			'c.js': [{
+				'value': '*'
+			}]
 		}
 	},
 	ignorePath: [
