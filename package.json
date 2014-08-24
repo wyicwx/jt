@@ -20,7 +20,7 @@
 		"akostream": "~0.0.1",
 		"glob": "~3.2.9",
 		"resolve": "~0.6.1",
-		"underscore": "~0.0.0"
+		"underscore": "~1.6.0"
 	},
 	"devDependencies": {
 		"mocha": "*",
