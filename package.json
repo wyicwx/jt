@@ -19,7 +19,8 @@
 		"cmd-interface": "~0.0.5",
 		"akostream": "~0.0.1",
 		"glob": "~3.2.9",
-		"resolve": "~0.6.1"
+		"resolve": "~0.6.1",
+		"underscore": "~0.0.0"
 	},
 	"devDependencies": {
 		"mocha": "*",
