@@ -1,49 +1,49 @@
 {
-	"name": "jt-cli",
-	"version": "0.2.7",
-	"description": "Javascript developer toolkit, based on virtual file system.",
-	"author": {
-		"name": "wyicwx",
-		"email": "wyicwx@gmail.com",
-		"web":  "http://weibo.com/simplemaple"
-	},
-	"dependencies": {
-		"colors": "~0.6.1",
-		"jt-jsmin": "~0.0.2",
-		"jt-cssminify": "~0.0.2",
-		"mime": "~1.2.11",
-		"mutils": "~0.0.5",
-		"jt-uglify": "~0.0.1",
-		"minimatch": "~0.2.14",
-		"through2": "~0.4.1",
-		"cmd-interface": "~0.0.5",
-		"akostream": "~0.0.1",
-		"glob": "~3.2.9",
-		"resolve": "~0.6.1",
-		"underscore": "~1.6.0"
-	},
-	"devDependencies": {
-		"mocha": "*",
-		"blanket": "*"
-	},
-	"scripts": {
-		"test": "make test-all"
-	},
-	"config": {
-		"blanket": {
-			"pattern": "jt/lib"
-		}
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/wyicwx/jt.git"
-	},
-	"bin": {
-		"jt": "bin/jt"
-	},
-	"main": "index.js",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/wyicwx/jt/issues"
-	}
+  "name": "jt-cli",
+  "version": "0.2.8",
+  "description": "Javascript developer toolkit, based on virtual file system.",
+  "author": {
+    "name": "wyicwx",
+    "email": "wyicwx@gmail.com",
+    "web": "http://weibo.com/simplemaple"
+  },
+  "dependencies": {
+    "colors": "~0.6.1",
+    "jt-jsmin": "~0.0.2",
+    "jt-cssminify": "~0.0.2",
+    "mime": "~1.2.11",
+    "mutils": "~0.0.5",
+    "jt-uglify": "~0.0.1",
+    "minimatch": "~0.2.14",
+    "through2": "~0.4.1",
+    "cmd-interface": "~0.0.5",
+    "akostream": "~0.0.1",
+    "glob": "~3.2.9",
+    "resolve": "~0.6.1",
+    "underscore": "~1.6.0"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "blanket": "*"
+  },
+  "scripts": {
+    "test": "make test-all"
+  },
+  "config": {
+    "blanket": {
+      "pattern": "jt/lib"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wyicwx/jt.git"
+  },
+  "bin": {
+    "jt": "bin/jt"
+  },
+  "main": "index.js",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wyicwx/jt/issues"
+  }
 }
