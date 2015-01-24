@@ -1,6 +1,10 @@
 # JT 
 > Javascript developer toolkit, based on virtual file system.
 
+#注意，JT已经不再维护
+
+欢迎关注更好的js构建工具[bone](https://github.com/wyicwx/bone)
+
 ![travis](https://api.travis-ci.org/wyicwx/jt.png)
 
 ##INSTALL
